@@ -101,7 +101,14 @@
     import { getFirestore, collection, addDoc, query, onSnapshot, doc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // Configuration
-    const firebaseConfig = JSON.parse(__firebase_config);
+    const firebaseConfig = {
+  apiKey: "AIzaSyDMTbWH8sKrNOp9LdH-4EufDjMukeELNoY",
+  authDomain: "myai-mind.firebaseapp.com",
+  projectId: "myai-mind",
+  storageBucket: "myai-mind.firebasestorage.app",
+  messagingSenderId: "79456867450",
+  appId: "1:79456867450:web:2b2a1eec01c7b420cb97c3"
+};
     const apiKey = "AIzaSyAxJiKA_Xo5YXjIiLMuIa1Qgk9sp5G-V2o"; // Gemini API Key
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'html-ai-mind-001';
 
@@ -293,3 +300,4 @@
 </body>
 
 </html>
+
