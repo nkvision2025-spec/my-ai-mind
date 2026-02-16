@@ -3,449 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Project Mind - Ultimate Pro</title>
+    <title>Personal AI Mind</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-        :root {
-            --bg-main: #0b0f1a;
-            --bg-sidebar: #05070a;
-            --text-main: #e2e8f0;
-            --border-color: #1e293b;
-            --card-bg: #111827;
-        }
-        .light-mode {
-            --bg-main: #f8fafc;
-            --bg-sidebar: #ffffff;
-            --text-main: #0f172a;
-            --border-color: #e2e8f0;
-            --card-bg: #f1f5f9;
-        }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-main); color: var(--text-main); transition: all 0.3s ease; }
-        .sidebar { background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); }
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        .doc-item.selected { background: rgba(37, 99, 235, 0.15); border-color: #3b82f6; }
-        .success-btn { background-color: #10b981 !important; }
-        .chat-bubble-selected { ring: 2px solid #3b82f6; background: rgba(59, 130, 246, 0.1); }
-        .prose p { margin-bottom: 1.25rem; line-height: 1.7; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
 </head>
-<body class="h-screen overflow-hidden">
+<body class="bg-slate-900 text-slate-100 overflow-hidden">
 
-<div id="app-container" class="h-full flex flex-col">
-    <!-- Notification Modal -->
-    <div id="custom-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full shadow-2xl">
-            <h4 id="modal-title" class="text-lg font-bold mb-2 text-white text-center">Message</h4>
-            <p id="modal-body" class="text-slate-400 text-sm mb-6 text-center"></p>
-            <button id="modal-close" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm text-white font-bold transition-all uppercase">OK</button>
+<div id="app" class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="hidden md:flex flex-col w-72 bg-slate-950 border-r border-slate-800 p-4">
+        <div class="flex items-center gap-2 mb-8 px-2">
+            <i data-lucide="brain-circuit" class="w-8 h-8 text-blue-400"></i>
+            <h1 class="text-xl font-bold tracking-tight text-white">My AI Mind</h1>
         </div>
-    </div>
-
-    <!-- Login View -->
-    <div id="login-view" class="flex-1 flex items-center justify-center p-4">
-        <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-10 rounded-[2.5rem] shadow-2xl text-white text-center">
-            <div class="flex flex-col items-center mb-8">
-                <div class="p-4 bg-blue-600/20 rounded-3xl mb-4">
-                    <i data-lucide="brain-circuit" class="w-12 h-12 text-blue-500"></i>
-                </div>
-                <h1 class="text-2xl font-bold">Project Mind Login</h1>
-                <p class="text-slate-400 text-sm">Secure Portal Access</p>
-            </div>
-            <div class="space-y-4 text-left">
-                <input type="text" id="login-id" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 outline-none focus:border-blue-500 text-white" placeholder="User ID (admin or user)">
-                <input type="password" id="login-pass" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 outline-none focus:border-blue-500 text-white" placeholder="Password">
-                <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20">LOGIN</button>
-                <p id="login-error" class="text-red-400 text-xs text-center hidden italic">Aapki details sahi nahi hain!</p>
+        
+        <div class="flex-1 overflow-y-auto space-y-4 custom-scrollbar">
+            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-2">Knowledge Base</div>
+            <div id="knowledge-list" class="space-y-2">
+                <!-- Knowledge items will be injected here -->
+                <p class="text-sm text-slate-500 px-2 italic">No documents uploaded yet.</p>
             </div>
         </div>
-    </div>
 
-    <!-- Main View -->
-    <div id="main-view" class="hidden flex-1 flex overflow-hidden">
-        <aside class="sidebar w-80 flex flex-col hidden md:flex shadow-2xl relative border-r border-slate-800">
-            <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="brain-circuit" class="w-6 h-6 text-blue-500"></i>
-                    <span class="font-bold tracking-tight text-white">AI Mind Pro</span>
-                </div>
-                <button id="btn-logout" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-[10px] font-bold transition-all border border-red-500/20">
-                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout
-                </button>
+        <div class="mt-auto pt-4 space-y-3 border-t border-slate-800">
+            <div class="flex items-center justify-between px-2">
+                <span class="text-xs text-slate-400">Language</span>
+                <select id="lang-select" class="bg-slate-800 text-xs rounded border border-slate-700 px-2 py-1 outline-none focus:border-blue-500">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi (हिन्दी)</option>
+                    <option value="gu">Gujarati (ગુજરાતી)</option>
+                </select>
             </div>
+            <button onclick="clearMemory()" class="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all text-sm font-medium">
+                <i data-lucide="trash-2" class="w-4 h-4"></i> Clear Memory
+            </button>
+        </div>
+    </aside>
 
-            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-6 text-slate-200">
-                <div id="role-section" class="space-y-2">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2 flex items-center gap-2 tracking-widest">
-                        <i data-lucide="settings" class="w-3 h-3 text-blue-500"></i> Master Role
-                    </h3>
-                    <textarea id="project-instructions" rows="3" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm outline-none focus:border-blue-500 resize-none transition-all text-slate-200" placeholder="Instructions..."></textarea>
-                    <button id="save-instructions" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs py-2.5 rounded-lg transition-all font-bold">Update Master Role</button>
-                </div>
-
-                <div id="admin-panel" class="space-y-4 border-t border-slate-800 pt-5 hidden">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2">Users Manager</h3>
-                    <div class="bg-slate-900/40 p-4 rounded-2xl border border-slate-800 space-y-2">
-                        <input type="text" id="new-user-id" placeholder="New ID" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none text-white">
-                        <input type="password" id="new-user-pass" placeholder="New Pass" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none text-white">
-                        <button id="add-user" class="w-full bg-blue-600 text-white text-[10px] py-2 rounded-lg font-bold">Add User</button>
-                    </div>
-                    <div id="user-list" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar"></div>
-                </div>
-
-                <div class="space-y-2 border-t border-slate-800 pt-4">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2 flex items-center justify-between tracking-widest">
-                        Knowledge Base
-                        <div class="flex items-center gap-2">
-                            <button id="select-all-docs" class="text-[10px] text-blue-500 hover:underline">All</button>
-                            <button id="trigger-upload" class="p-1 text-blue-500 hover:text-blue-400 bg-blue-500/10 rounded-md transition-all">
-                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                            </button>
-                        </div>
-                    </h3>
-                    <input type="file" id="file-input" class="hidden" multiple accept=".pdf,.doc,.docx,.txt,image/*">
-                    <div id="doc-list" class="space-y-2"></div>
-                </div>
+    <!-- Main Chat -->
+    <main class="flex-1 flex flex-col min-w-0">
+        <!-- Header -->
+        <header class="p-4 border-b border-slate-800 flex items-center justify-between md:hidden">
+            <div class="flex items-center gap-2">
+                <i data-lucide="brain-circuit" class="w-6 h-6 text-blue-400"></i>
+                <span class="font-bold">AI Mind</span>
             </div>
+        </header>
 
-            <div class="p-4 border-t border-slate-800 bg-slate-950/20">
-                <div class="flex p-1 bg-slate-900/80 rounded-xl gap-1 border border-slate-800">
-                    <button data-mode="doc" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold bg-blue-600 text-white">DOCS</button>
-                    <button data-mode="web" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500">WEB</button>
-                    <button data-mode="both" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500">BOTH</button>
+        <!-- Messages Area -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar">
+            <!-- Welcome View -->
+            <div id="welcome-screen" class="h-full flex flex-col items-center justify-center text-center space-y-4 max-w-md mx-auto">
+                <div class="w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center">
+                    <i data-lucide="brain-circuit" class="w-10 h-10 text-blue-500 animate-pulse"></i>
                 </div>
+                <h2 class="text-2xl font-bold">Aapka Personalized Mind Taiyar Hai</h2>
+                <p class="text-slate-400">Koi bhi document ya image upload karein. Main sab yaad rakhunga.</p>
             </div>
-        </aside>
+        </div>
 
-        <!-- Main Chat Area -->
-        <main class="flex-1 flex flex-col relative bg-slate-900/30 overflow-hidden">
-            <header class="h-16 border-b border-slate-800 flex items-center justify-between px-6 backdrop-blur-md sticky top-0 z-10">
-                <div class="flex items-center gap-3">
-                    <div id="status-indicator" class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-                    <span id="display-user-role" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Active System</span>
-                </div>
-                
-                <div class="flex items-center gap-2">
-                    <div id="selection-controls" class="hidden flex items-center gap-2 mr-4 pr-4 border-r border-slate-800">
-                        <button id="btn-delete-selected" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg text-[10px] font-bold uppercase"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete</button>
-                        <button id="btn-print-selected" class="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg text-[10px] font-bold uppercase"><i data-lucide="printer" class="w-3.5 h-3.5"></i> Print</button>
-                        <button id="btn-cancel-selection" class="p-2 text-slate-500 hover:bg-slate-800 rounded-lg text-[10px] font-bold uppercase">Cancel</button>
-                    </div>
-                    <button id="theme-toggle" class="p-2.5 hover:bg-slate-800/50 rounded-full text-slate-400 transition-all"><i data-lucide="sun" class="w-5 h-5"></i></button>
-                    <div class="w-px h-6 bg-slate-800 mx-1"></div>
-                    <button id="export-docx" class="p-2.5 hover:bg-blue-600/10 hover:text-blue-500 rounded-lg text-slate-400 transition-all"><i data-lucide="file-text" class="w-5 h-5"></i></button>
-                    <button id="export-pdf" class="p-2.5 hover:bg-red-600/10 hover:text-red-500 rounded-lg text-slate-400 transition-all"><i data-lucide="file-type-2" class="w-5 h-5"></i></button>
-                </div>
-            </header>
+        <!-- Input Section -->
+        <div class="p-4 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex items-end gap-2 bg-slate-800/50 border border-slate-700 rounded-2xl p-2 focus-within:ring-2 ring-blue-500/50 transition-all">
+                    <button onclick="document.getElementById('file-input').click()" class="p-3 text-slate-400 hover:text-blue-400 hover:bg-slate-700 rounded-xl transition-all shrink-0">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                    </button>
+                    <input type="file" id="file-input" class="hidden" accept=".pdf,.doc,.docx,.txt,image/*">
+                    
+                    <textarea id="user-input" placeholder="Sawal puchein..." rows="1" class="flex-1 bg-transparent border-none outline-none py-3 px-2 resize-none text-slate-200 placeholder:text-slate-500 max-h-32"></textarea>
 
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 md:p-10 space-y-8 custom-scrollbar">
-                <div class="h-full flex flex-col items-center justify-center text-center opacity-10 select-none">
-                    <i data-lucide="brain" class="w-24 h-24 mb-4 text-blue-400"></i>
-                    <p class="text-3xl font-bold tracking-tighter">AI MIND PORTAL</p>
+                    <button id="send-btn" class="p-3 rounded-xl bg-slate-700 text-slate-500 transition-all shrink-0">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
                 </div>
+                <p class="text-[10px] text-center text-slate-600 mt-2 uppercase tracking-widest font-semibold">
+                    Multi-Language AI Assistant (Hindi, English, Gujarati)
+                </p>
             </div>
-
-            <div class="p-6 bg-gradient-to-t from-slate-950/20 to-transparent">
-                <div class="max-w-4xl mx-auto">
-                    <div class="relative bg-slate-900/90 border border-slate-800 rounded-[2.5rem] p-3 shadow-2xl backdrop-blur-xl">
-                        <textarea id="chat-input" rows="1" class="w-full bg-transparent border-none outline-none py-3 px-6 resize-none text-slate-200 placeholder:text-slate-500 max-h-40 scrollbar-none" placeholder="Koi sawal puchein..."></textarea>
-                        
-                        <div class="flex items-center justify-between px-3 pb-1 pt-1 border-t border-slate-800/50 mt-2">
-                            <div class="flex items-center gap-2">
-                                <button id="btn-mic" class="p-3 text-slate-400 hover:text-blue-400 hover:bg-slate-800 rounded-2xl transition-all"><i data-lucide="mic" class="w-5 h-5"></i></button>
-                                <button id="btn-audio-stop" class="p-3 text-red-400 bg-red-500/10 rounded-2xl hidden"><i data-lucide="square" class="w-4 h-4"></i></button>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span id="current-search-label" class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">DOCS ONLY</span>
-                                <button id="btn-send" class="bg-blue-600 hover:bg-blue-500 text-white p-3.5 rounded-2xl transition-all shadow-lg shadow-blue-600/30 group">
-                                    <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-0.5 transition-transform"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
+        </div>
+    </main>
 </div>
 
+<!-- Firebase SDK -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, onSnapshot, doc, setDoc, deleteDoc, getDocs, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, onSnapshot, doc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // --- INTEGRATED CONFIGURATION ---
+    // Configuration
     const firebaseConfig = {
-        apiKey: "AIzaSyDMTbWH8sKrNOp9LdH-4EufDjMukeELNoY",
-        authDomain: "myai-mind.firebaseapp.com",
-        projectId: "myai-mind",
-        storageBucket: "myai-mind.firebasestorage.app",
-        messagingSenderId: "79456867450",
-        appId: "1:79456867450:web:2b2a1eec01c7b420cb97c3"
-    };
-    const apiKey = "AIzaSyAxJiKA_Xo5YXjIiLMuIa1Qgk9sp5G-V2o"; 
-    const appId = 'html-ai-mind-001';
+  apiKey: "AIzaSyDMTbWH8sKrNOp9LdH-4EufDjMukeELNoY",
+  authDomain: "myai-mind.firebaseapp.com",
+  projectId: "myai-mind",
+  storageBucket: "myai-mind.firebasestorage.app",
+  messagingSenderId: "79456867450",
+  appId: "1:79456867450:web:2b2a1eec01c7b420cb97c3"
+};
+    const apiKey = "AIzaSyAxJiKA_Xo5YXjIiLMuIa1Qgk9sp5G-V2o"; // Gemini API Key
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'html-ai-mind-001';
 
+    // Global Services
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
-    let userRole = 'user';
-    let searchMode = 'doc';
-    let messages = [];
+    let currentUser = null;
     let knowledgeBase = [];
-    let usersList = [];
-    let selectedDocIds = new Set();
-    let selectedChatIds = new Set();
-    let activeUserId = localStorage.getItem('portal_id') || null;
-    let synthesis = window.speechSynthesis;
 
+    // Initialize UI
     lucide.createIcons();
 
-    // 1. Auth & Session (Rule 3)
+    const chatContainer = document.getElementById('chat-messages');
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const knowledgeList = document.getElementById('knowledge-list');
+    const langSelect = document.getElementById('lang-select');
+
+    // 1. Auth Flow
     const initAuth = async () => {
-        try { 
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else { await signInAnonymously(auth); }
-            return true; 
-        } catch (e) { return false; }
-    };
-
-    const login = async () => {
-        const id = document.getElementById('login-id').value.trim();
-        const pass = document.getElementById('login-pass').value.trim();
-        const errorEl = document.getElementById('login-error');
-        if (!auth.currentUser) await initAuth();
-
-        if (id === 'admin' && pass === 'admin123') {
-            userRole = 'admin'; activeUserId = 'admin';
-            localStorage.setItem('portal_role', 'admin'); localStorage.setItem('portal_id', 'admin');
-            showMain();
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(auth, __initial_auth_token);
         } else {
-            try {
-                // Rule 1 Public Data path
-                const q = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'users'));
-                const found = q.docs.find(d => d.data().userId === id && d.data().password === pass);
-                if (found) {
-                    userRole = 'user'; activeUserId = id;
-                    localStorage.setItem('portal_role', 'user'); localStorage.setItem('portal_id', id);
-                    showMain();
-                } else { errorEl.classList.remove('hidden'); }
-            } catch (e) { errorEl.classList.remove('hidden'); }
+            await signInAnonymously(auth);
         }
     };
 
-    const showMain = () => {
-        document.getElementById('login-view').classList.add('hidden');
-        document.getElementById('main-view').classList.remove('hidden');
-        initDashboard();
-    };
-
-    function initDashboard() {
-        userRole = localStorage.getItem('portal_role') || 'user';
-        activeUserId = localStorage.getItem('portal_id');
-        document.getElementById('display-user-role').innerText = `ROLE: ${userRole.toUpperCase()} (${activeUserId})`;
-        if (userRole === 'admin') document.getElementById('admin-panel').classList.remove('hidden');
-        setupListeners();
-    }
-
-    let unsubSettings, unsubUsers, unsubKB, unsubChat;
-    async function setupListeners() {
-        if (!auth.currentUser || !activeUserId) return;
-        if (unsubSettings) unsubSettings(); if (unsubUsers) unsubUsers(); if (unsubKB) unsubKB(); if (unsubChat) unsubChat();
-
-        unsubSettings = onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'global'), (s) => {
-            if (s.exists()) document.getElementById('project-instructions').value = s.data().instructions;
-        });
-
-        if (userRole === 'admin') {
-            unsubUsers = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'users'), (snapshot) => {
-                usersList = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-                renderUserList(); renderDocList();
-            });
-        } else {
-            const q = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'users'));
-            usersList = q.docs.map(d => ({ id: d.id, ...d.data() }));
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        if (user) {
+            setupListeners(user.uid);
         }
-
-        unsubKB = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'knowledge'), (snapshot) => {
-            knowledgeBase = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            renderDocList(); if(userRole === 'admin') renderUserList();
-        });
-
-        const chatColl = `chats_${activeUserId}`;
-        unsubChat = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', chatColl), (snapshot) => {
-            messages = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => a.timestamp - b.timestamp);
-            renderChat();
-        });
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-        if (user) { if (localStorage.getItem('portal_id')) showMain(); } else { await initAuth(); }
     });
 
-    // --- REFINED AI LOGIC (TIMEOUT & ERROR PROTECTION) ---
-    async function callAI(prompt, fileData = null, mimeType = null, isIndexing = false) {
-        const masterInstr = document.getElementById('project-instructions').value;
-        const selDocs = knowledgeBase.filter(d => selectedDocIds.has(d.id));
-        const docRoles = selDocs.map(d => d.role ? `[Instruction for ${d.name}: ${d.role}]` : '').join('\n');
-        const context = selDocs.map(d => `[Summary of ${d.name}: ${d.summary}]`).join('\n\n');
-        const isSearchEnabled = (searchMode !== 'doc' && !isIndexing);
-        
-        const systemPrompt = `Master Role: ${masterInstr}\nDoc Roles: ${docRoles}\nKnowledge Context: ${context}\n\nMODE: ${searchMode}. Answer only from context if doc mode. Format in paragraphs. Be helpful.`;
+    initAuth();
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-        const payload = { 
-            contents: [{ parts: [{ text: prompt }] }], 
-            systemInstruction: { parts: [{ text: systemPrompt }] },
-            tools: isSearchEnabled ? [{ "google_search": {} }] : [] 
-        };
+    // 2. Firestore Listeners
+    function setupListeners(userId) {
+        // Chat History
+        const chatPath = collection(db, 'artifacts', appId, 'users', userId, 'chats');
+        onSnapshot(chatPath, (snapshot) => {
+            const messages = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            renderMessages(messages.sort((a, b) => a.timestamp - b.timestamp));
+        }, (err) => console.error(err));
 
-        if (fileData) payload.contents[0].parts.push({ inlineData: { mimeType, data: fileData } });
-
-        let delay = 2000;
-        for (let i = 0; i < 4; i++) {
-            try {
-                const ctrl = new AbortController();
-                const tid = setTimeout(() => ctrl.abort(), 110000); // 110 seconds for large docs
-                const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload), signal: ctrl.signal });
-                clearTimeout(tid);
-                if (!res.ok) throw new Error("API fail");
-                const data = await res.json();
-                return { text: data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.", sources: [] };
-            } catch (e) {
-                if (i === 3) return { text: "Connection error. Badi file process karte waqt timeout ho sakta hai. Kripya choti file try karein ya internet check karein.", sources: [] };
-                await new Promise(r => setTimeout(r, delay)); delay *= 2;
-            }
-        }
+        // Knowledge Base
+        const kbPath = collection(db, 'artifacts', appId, 'users', userId, 'knowledge');
+        onSnapshot(kbPath, (snapshot) => {
+            knowledgeBase = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            renderKnowledge();
+        });
     }
 
-    // Handlers
-    document.getElementById('btn-login').onclick = login;
-    document.getElementById('btn-logout').onclick = () => { auth.signOut(); localStorage.clear(); location.reload(); };
+    // 3. Render Functions
+    function renderMessages(messages) {
+        if (messages.length > 0) welcomeScreen.classList.add('hidden');
+        else welcomeScreen.classList.remove('hidden');
 
-    document.getElementById('btn-send').onclick = async () => {
-        const text = document.getElementById('chat-input').value.trim();
-        if (!text || !auth.currentUser || !activeUserId) return;
-        document.getElementById('chat-input').value = '';
-        const chatColl = `chats_${activeUserId}`;
-        
-        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text, sender: 'user', timestamp: Date.now() });
-        const thinkingMsg = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: "Thinking...", sender: 'system', timestamp: Date.now() });
-        
-        const res = await callAI(text);
-        
-        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, thinkingMsg.id));
-        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: res.text, sender: 'ai', timestamp: Date.now() });
-    };
+        chatContainer.innerHTML = '';
+        if (messages.length === 0) chatContainer.appendChild(welcomeScreen);
 
-    // Fix for iFrame upload trigger
-    document.getElementById('trigger-upload').onclick = () => document.getElementById('file-input').click();
+        messages.forEach(msg => {
+            const div = document.createElement('div');
+            div.className = `flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`;
+            
+            let bgClass = 'bg-slate-800 text-slate-200 border border-slate-700/50';
+            if (msg.sender === 'user') bgClass = 'bg-blue-600 text-white';
+            if (msg.sender === 'system') bgClass = 'bg-slate-800/50 text-slate-400 border border-slate-700 italic text-sm';
 
-    document.getElementById('file-input').onchange = async (e) => {
-        const files = Array.from(e.target.files); if (!auth.currentUser || !activeUserId) return;
-        const chatColl = `chats_${activeUserId}`;
-        for (const file of files) {
-            const reader = new FileReader();
-            const procBubble = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: `AI is analyzing ${file.name}... Please wait.`, sender: 'system', timestamp: Date.now() });
-            reader.onload = async (ev) => {
-                const b64 = ev.target.result.split(',')[1];
-                const res = await callAI(`Summarize this document fully so I can recall it: ${file.name}`, b64, file.type, true);
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'knowledge'), { name: file.name, type: file.type, summary: res.text, role: '', timestamp: Date.now() });
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, procBubble.id));
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: `Upload successfully for "${file.name}". Now I am ready to chat.`, sender: 'ai', timestamp: Date.now() });
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    // UI Renders
-    function renderChat() {
-        const chatBox = document.getElementById('chat-messages');
-        if (messages.length > 0) {
-            chatBox.innerHTML = messages.map(m => {
-                const isSelected = selectedChatIds.has(m.id);
-                const isUser = m.sender === 'user';
-                const isSystem = m.sender === 'system';
-                return `<div class="flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''} group">
-                    <div class="pt-2"><input type="checkbox" class="w-4 h-4 rounded accent-blue-600 cursor-pointer" ${isSelected ? 'checked' : ''} onchange="toggleChatSelection('${m.id}')"></div>
-                    <div class="max-w-[85%] md:max-w-[75%] rounded-3xl p-5 shadow-xl transition-all ${isSelected ? 'chat-bubble-selected ring-2 ring-blue-500' : ''} ${isUser ? 'bg-blue-600 text-white rounded-tr-none' : isSystem ? 'bg-slate-800/40 text-slate-400 italic text-xs' : 'bg-slate-900 border border-slate-800 rounded-tl-none'}">
-                        <div class="prose prose-invert prose-sm whitespace-pre-wrap">${m.text}</div>
-                        ${m.sender === 'ai' ? `<button onclick="speakText('${m.id}')" class="mt-4 p-2.5 hover:bg-slate-800 rounded-xl text-slate-500 transition-all"><i data-lucide="volume-2" class="w-4 h-4"></i></button>` : ''}
-                    </div>
-                </div>`;
-            }).join('');
-        } else {
-            chatBox.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-center opacity-10"><i data-lucide="brain" class="w-24 h-24 mb-4 text-blue-400"></i><p class="text-3xl font-bold tracking-tighter">AI MIND PORTAL</p></div>`;
-        }
-        lucide.createIcons(); chatBox.scrollTop = chatBox.scrollHeight;
-        updateSelectionUI();
+            div.innerHTML = `<div class="max-w-[85%] md:max-w-[70%] rounded-2xl p-4 shadow-sm ${bgClass}">${msg.text}</div>`;
+            chatContainer.appendChild(div);
+        });
+        chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    function renderUserList() {
-        const list = document.getElementById('user-list');
-        list.innerHTML = usersList.map(u => `
-            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-3">
-                <div class="flex items-center justify-between"><span class="text-xs font-bold text-blue-400">${u.userId}</span><button onclick="deleteUser('${u.id}')" class="text-red-500 hover:text-red-400 transition-all"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div>
-                <div class="grid grid-cols-1 gap-1 max-h-32 overflow-y-auto custom-scrollbar p-1">
-                    ${knowledgeBase.map(d => `<label class="flex items-center gap-2 p-1.5 rounded bg-slate-950 border border-slate-800 cursor-pointer transition-all"><input type="checkbox" class="w-3 h-3 accent-blue-600" ${u.allowedDocs?.includes(d.id) ? 'checked' : ''} onchange="toggleUserDoc('${u.id}', '${d.id}')"><span class="text-[9px] truncate text-slate-300">${d.name}</span></label>`).join('')}
+    function renderKnowledge() {
+        if (knowledgeBase.length === 0) {
+            knowledgeList.innerHTML = '<p class="text-sm text-slate-500 px-2 italic">No documents uploaded yet.</p>';
+            return;
+        }
+        knowledgeList.innerHTML = knowledgeBase.map(doc => `
+            <div class="flex items-center gap-3 p-3 bg-slate-900/50 rounded-xl border border-slate-800">
+                <i data-lucide="file-text" class="w-5 h-5 text-blue-400 shrink-0"></i>
+                <div class="min-w-0">
+                    <p class="text-sm font-medium truncate text-slate-200">${doc.name}</p>
+                    <p class="text-[10px] text-slate-500 uppercase">${doc.type.split('/')[1]}</p>
                 </div>
             </div>
         `).join('');
         lucide.createIcons();
     }
 
-    function renderDocList() {
-        const uId = localStorage.getItem('portal_id');
-        const userFound = usersList.find(u => u.userId === uId);
-        let visibleDocs = userRole === 'admin' ? knowledgeBase : knowledgeBase.filter(d => userFound?.allowedDocs?.includes(d.id));
+    // 4. Gemini API Logic
+    async function callGemini(prompt, imageData = null) {
+        const lang = langSelect.value;
+        const kbContext = knowledgeBase.map(d => `[Title: ${d.name}, Summary: ${d.summary}]`).join('. ');
+        const systemPrompt = `You are a personalized 'AI Mind'. Language: ${lang}. 
+        Context: ${kbContext}. Respond based on context in ${lang}.`;
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
         
-        document.getElementById('doc-list').innerHTML = visibleDocs.map(d => `
-            <div class="group flex flex-col gap-2 p-3 rounded-xl border border-slate-800 cursor-pointer doc-item transition-all ${selectedDocIds.has(d.id) ? 'selected' : ''}" onclick="toggleDocSelection('${d.id}')">
-                <div class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4 rounded accent-blue-600 pointer-events-none" ${selectedDocIds.has(d.id) ? 'checked' : ''}><p class="text-[11px] font-bold truncate flex-1">${d.name}</p>${userRole === 'admin' ? `<button onclick="event.stopPropagation(); deleteDocById('${d.id}')" class="opacity-0 group-hover:opacity-100 text-red-500 transition-all"><i data-lucide="trash-2" class="w-3 h-3"></i></button>` : ''}</div>
-                ${selectedDocIds.has(d.id) ? `<div class="space-y-1.5" onclick="event.stopPropagation()"><textarea id="instr-${d.id}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-[9px] text-slate-400 h-16 resize-none outline-none focus:border-blue-500" placeholder="Doc role...">${d.role || ''}</textarea><button onclick="updateDocRole('${d.id}')" class="w-full bg-blue-600/20 text-blue-400 py-1 rounded text-[9px] font-bold uppercase transition-all">Save</button></div>` : ''}
-            </div>
-        `).join('');
-        lucide.createIcons();
+        let contents = [{ parts: [{ text: prompt }] }];
+        if (imageData) {
+            contents[0].parts.push({ inlineData: { mimeType: "image/png", data: imageData } });
+        }
+
+        const payload = {
+            contents: contents,
+            systemInstruction: { parts: [{ text: systemPrompt }] }
+        };
+
+        for (let i = 0, delay = 1000; i < 5; i++, delay *= 2) {
+            try {
+                const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
+                const data = await res.json();
+                if (res.ok) return data.candidates[0].content.parts[0].text;
+            } catch (e) {
+                await new Promise(r => setTimeout(r, delay));
+            }
+        }
+        return "Maafi chahta hoon, connection mein samasya hai.";
     }
 
-    // Helper Functions
-    window.toggleChatSelection = (id) => { if (selectedChatIds.has(id)) selectedChatIds.delete(id); else selectedChatIds.add(id); renderChat(); };
-    function updateSelectionUI() { const ctrl = document.getElementById('selection-controls'); if (selectedChatIds.size > 0) ctrl.classList.remove('hidden'); else ctrl.classList.add('hidden'); }
-    window.toggleDocSelection = (id) => { if (selectedDocIds.has(id)) selectedDocIds.delete(id); else selectedDocIds.add(id); renderDocList(); };
-    window.deleteUser = async (id) => { if (!auth.currentUser) return; await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'users', id)); };
-    window.deleteDocById = async (id) => { if (!auth.currentUser) return; await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'knowledge', id)); };
-    window.updateDocRole = async (id) => { const val = document.getElementById(`instr-${id}`).value; await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'knowledge', id), { role: val }); renderDocList(); };
-    
-    document.getElementById('btn-delete-selected').onclick = async () => {
-        if (!auth.currentUser || selectedChatIds.size === 0) return;
-        const chatColl = `chats_${activeUserId}`;
-        const ids = Array.from(selectedChatIds); selectedChatIds.clear();
-        for (let id of ids) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, id));
+    // 5. User Actions
+    const handleSend = async () => {
+        const text = userInput.value.trim();
+        if (!text || !currentUser) return;
+
+        userInput.value = '';
+        const userMsg = { text, sender: 'user', timestamp: Date.now() };
+        await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'chats'), userMsg);
+
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'flex justify-start';
+        typingIndicator.innerHTML = `<div class="bg-slate-800 rounded-2xl p-4 text-slate-400">Thinking...</div>`;
+        chatContainer.appendChild(typingIndicator);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        const aiResponse = await callGemini(text);
+        chatContainer.removeChild(typingIndicator);
+
+        await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'chats'), {
+            text: aiResponse, sender: 'ai', timestamp: Date.now()
+        });
     };
 
-    document.getElementById('theme-toggle').onclick = () => {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        document.getElementById('theme-toggle').innerHTML = `<i data-lucide="${isLight ? 'moon' : 'sun'}" class="w-5 h-5"></i>`;
-        lucide.createIcons();
-    };
+    const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file || !currentUser) return;
 
-    document.querySelectorAll('.search-mode-btn').forEach(btn => {
-        btn.onclick = (e) => {
-            searchMode = e.target.dataset.mode;
-            document.querySelectorAll('.search-mode-btn').forEach(b => { b.classList.remove('bg-blue-600', 'text-white'); b.classList.add('text-slate-500'); });
-            e.target.classList.add('bg-blue-600', 'text-white');
-            document.getElementById('current-search-label').innerText = `${searchMode.toUpperCase()} MODE`;
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const base64Data = event.target.result.split(',')[1];
+            const summary = await callGemini(`Summarize this file so I can remember it: ${file.name}`, file.type.startsWith('image/') ? base64Data : null);
+
+            await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'knowledge'), {
+                name: file.name, type: file.type, summary: summary, timestamp: Date.now()
+            });
+
+            await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'chats'), {
+                text: `Document uploaded: ${file.name}. Maine iska context yaad kar liya hai.`,
+                sender: 'system',
+                timestamp: Date.now()
+            });
         };
-    });
+        reader.readAsDataURL(file);
+    };
+
+    window.clearMemory = async () => {
+        if (!currentUser) return;
+        const chats = await getDocs(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'chats'));
+        const kb = await getDocs(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'knowledge'));
+        chats.forEach(d => deleteDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'chats', d.id)));
+        kb.forEach(d => deleteDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'knowledge', d.id)));
+    };
+
+    // Event Bindings
+    sendBtn.onclick = handleSend;
+    userInput.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
+    userInput.oninput = () => {
+        sendBtn.classList.toggle('bg-blue-600', userInput.value.trim().length > 0);
+        sendBtn.classList.toggle('text-white', userInput.value.trim().length > 0);
+    };
+    document.getElementById('file-input').onchange = handleFileUpload;
 
 </script>
 </body>
+
 </html>
+
