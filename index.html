@@ -33,8 +33,6 @@
         .success-btn { background-color: #10b981 !important; }
         .chat-bubble-selected { ring: 2px solid #3b82f6; background: rgba(59, 130, 246, 0.1); }
         .prose p { margin-bottom: 1.25rem; line-height: 1.7; }
-        .animate-thinking { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
     </style>
 </head>
 <body class="h-screen overflow-hidden">
@@ -43,9 +41,9 @@
     <!-- Notification Modal -->
     <div id="custom-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full shadow-2xl">
-            <h4 id="modal-title" class="text-lg font-bold mb-2 text-white text-center">Notification</h4>
+            <h4 id="modal-title" class="text-lg font-bold mb-2 text-white text-center">Message</h4>
             <p id="modal-body" class="text-slate-400 text-sm mb-6 text-center"></p>
-            <button id="modal-close" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm text-white font-bold transition-all uppercase">Theek Hai</button>
+            <button id="modal-close" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm text-white font-bold transition-all uppercase">OK</button>
         </div>
     </div>
 
@@ -70,46 +68,44 @@
 
     <!-- Main View -->
     <div id="main-view" class="hidden flex-1 flex overflow-hidden">
-        <!-- Sidebar -->
-        <aside class="sidebar w-80 flex flex-col hidden md:flex shadow-2xl relative">
+        <aside class="sidebar w-80 flex flex-col hidden md:flex shadow-2xl relative border-r border-slate-800">
             <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
                 <div class="flex items-center gap-2">
                     <i data-lucide="brain-circuit" class="w-6 h-6 text-blue-500"></i>
                     <span class="font-bold tracking-tight text-white">AI Mind Pro</span>
                 </div>
                 <button id="btn-logout" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-[10px] font-bold transition-all border border-red-500/20">
-                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i> LOGOUT
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout
                 </button>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-6">
-                <!-- Master Role -->
+            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-6 text-slate-200">
                 <div id="role-section" class="space-y-2">
                     <h3 class="text-xs font-bold text-slate-500 uppercase px-2 flex items-center gap-2 tracking-widest">
-                        <i data-lucide="settings" class="w-3 h-3 text-blue-500"></i> MASTER ROLE
+                        <i data-lucide="settings" class="w-3 h-3 text-blue-500"></i> Master Role
                     </h3>
-                    <textarea id="project-instructions" rows="3" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm outline-none focus:border-blue-500 resize-none transition-all text-slate-200" placeholder="AI ko instructions dein..."></textarea>
+                    <textarea id="project-instructions" rows="3" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm outline-none focus:border-blue-500 resize-none transition-all text-slate-200" placeholder="Instructions..."></textarea>
                     <button id="save-instructions" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs py-2.5 rounded-lg transition-all font-bold">Update Master Role</button>
                 </div>
 
-                <!-- Admin: User Management -->
                 <div id="admin-panel" class="space-y-4 border-t border-slate-800 pt-5 hidden">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2 tracking-widest">USERS MANAGER</h3>
+                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2">Users Manager</h3>
                     <div class="bg-slate-900/40 p-4 rounded-2xl border border-slate-800 space-y-2">
-                        <input type="text" id="new-user-id" placeholder="New ID" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none text-white">
-                        <input type="password" id="new-user-pass" placeholder="New Pass" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none text-white">
-                        <button id="add-user" class="w-full bg-blue-600 text-white text-[10px] py-2 rounded-lg font-bold hover:bg-blue-500 uppercase">Add User</button>
+                        <input type="text" id="new-user-id" placeholder="New ID" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none text-white">
+                        <input type="password" id="new-user-pass" placeholder="New Pass" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none text-white">
+                        <button id="add-user" class="w-full bg-blue-600 text-white text-[10px] py-2 rounded-lg font-bold">Add User</button>
                     </div>
                     <div id="user-list" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar"></div>
                 </div>
 
-                <!-- Knowledge Base -->
                 <div class="space-y-2 border-t border-slate-800 pt-4">
                     <h3 class="text-xs font-bold text-slate-500 uppercase px-2 flex items-center justify-between tracking-widest">
-                        DOCUMENTS BASE
+                        Knowledge Base
                         <div class="flex items-center gap-2">
                             <button id="select-all-docs" class="text-[10px] text-blue-500 hover:underline">All</button>
-                            <button onclick="document.getElementById('file-input').click()" class="text-blue-500 hover:text-blue-400 transition-all"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                            <button id="trigger-upload" class="p-1 text-blue-500 hover:text-blue-400 bg-blue-500/10 rounded-md transition-all">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                            </button>
                         </div>
                     </h3>
                     <input type="file" id="file-input" class="hidden" multiple accept=".pdf,.doc,.docx,.txt,image/*">
@@ -117,18 +113,17 @@
                 </div>
             </div>
 
-            <!-- Mode Selector -->
             <div class="p-4 border-t border-slate-800 bg-slate-950/20">
                 <div class="flex p-1 bg-slate-900/80 rounded-xl gap-1 border border-slate-800">
-                    <button data-mode="doc" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold bg-blue-600 text-white transition-all uppercase">Docs</button>
-                    <button data-mode="web" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500 hover:bg-slate-800 transition-all uppercase">Web</button>
-                    <button data-mode="both" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500 hover:bg-slate-800 transition-all uppercase">Both</button>
+                    <button data-mode="doc" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold bg-blue-600 text-white">DOCS</button>
+                    <button data-mode="web" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500">WEB</button>
+                    <button data-mode="both" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500">BOTH</button>
                 </div>
             </div>
         </aside>
 
-        <!-- Chat Area -->
-        <main class="flex-1 flex flex-col relative bg-slate-900/30">
+        <!-- Main Chat Area -->
+        <main class="flex-1 flex flex-col relative bg-slate-900/30 overflow-hidden">
             <header class="h-16 border-b border-slate-800 flex items-center justify-between px-6 backdrop-blur-md sticky top-0 z-10">
                 <div class="flex items-center gap-3">
                     <div id="status-indicator" class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
@@ -136,13 +131,11 @@
                 </div>
                 
                 <div class="flex items-center gap-2">
-                    <!-- Selection Controls -->
                     <div id="selection-controls" class="hidden flex items-center gap-2 mr-4 pr-4 border-r border-slate-800">
-                        <button id="btn-delete-selected" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg flex items-center gap-1.5 text-[10px] font-bold uppercase transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i> Delete</button>
-                        <button id="btn-print-selected" class="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg flex items-center gap-1.5 text-[10px] font-bold transition-all uppercase"><i data-lucide="printer" class="w-4 h-4"></i> Print</button>
+                        <button id="btn-delete-selected" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg text-[10px] font-bold uppercase"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete</button>
+                        <button id="btn-print-selected" class="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg text-[10px] font-bold uppercase"><i data-lucide="printer" class="w-3.5 h-3.5"></i> Print</button>
                         <button id="btn-cancel-selection" class="p-2 text-slate-500 hover:bg-slate-800 rounded-lg text-[10px] font-bold uppercase">Cancel</button>
                     </div>
-
                     <button id="theme-toggle" class="p-2.5 hover:bg-slate-800/50 rounded-full text-slate-400 transition-all"><i data-lucide="sun" class="w-5 h-5"></i></button>
                     <div class="w-px h-6 bg-slate-800 mx-1"></div>
                     <button id="export-docx" class="p-2.5 hover:bg-blue-600/10 hover:text-blue-500 rounded-lg text-slate-400 transition-all"><i data-lucide="file-text" class="w-5 h-5"></i></button>
@@ -150,14 +143,13 @@
                 </div>
             </header>
 
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 custom-scrollbar">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 md:p-10 space-y-8 custom-scrollbar">
                 <div class="h-full flex flex-col items-center justify-center text-center opacity-10 select-none">
                     <i data-lucide="brain" class="w-24 h-24 mb-4 text-blue-400"></i>
                     <p class="text-3xl font-bold tracking-tighter">AI MIND PORTAL</p>
                 </div>
             </div>
 
-            <!-- Input Bar -->
             <div class="p-6 bg-gradient-to-t from-slate-950/20 to-transparent">
                 <div class="max-w-4xl mx-auto">
                     <div class="relative bg-slate-900/90 border border-slate-800 rounded-[2.5rem] p-3 shadow-2xl backdrop-blur-xl">
@@ -169,7 +161,7 @@
                                 <button id="btn-audio-stop" class="p-3 text-red-400 bg-red-500/10 rounded-2xl hidden"><i data-lucide="square" class="w-4 h-4"></i></button>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span id="current-search-label" class="text-[10px] text-slate-500 font-bold uppercase tracking-tighter tracking-widest">DOCS ONLY</span>
+                                <span id="current-search-label" class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">DOCS ONLY</span>
                                 <button id="btn-send" class="bg-blue-600 hover:bg-blue-500 text-white p-3.5 rounded-2xl transition-all shadow-lg shadow-blue-600/30 group">
                                     <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-0.5 transition-transform"></i>
                                 </button>
@@ -210,29 +202,12 @@
     let usersList = [];
     let selectedDocIds = new Set();
     let selectedChatIds = new Set();
-    let currentTheme = 'dark';
     let activeUserId = localStorage.getItem('portal_id') || null;
     let synthesis = window.speechSynthesis;
 
-    const views = { login: document.getElementById('login-view'), main: document.getElementById('main-view') };
-    const chatBox = document.getElementById('chat-messages');
-    const chatInput = document.getElementById('chat-input');
-    const docListEl = document.getElementById('doc-list');
-    const userListEl = document.getElementById('user-list');
-
     lucide.createIcons();
 
-    const showMessage = (title, body) => {
-        document.getElementById('modal-title').innerText = title;
-        document.getElementById('modal-body').innerText = body;
-        document.getElementById('custom-modal').classList.remove('hidden');
-        document.getElementById('custom-modal').classList.add('flex');
-    };
-    document.getElementById('modal-close').onclick = () => {
-        document.getElementById('custom-modal').classList.add('hidden');
-        document.getElementById('custom-modal').classList.remove('flex');
-    };
-
+    // 1. Auth & Session (Rule 3)
     const initAuth = async () => {
         try { 
             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -246,7 +221,6 @@
         const id = document.getElementById('login-id').value.trim();
         const pass = document.getElementById('login-pass').value.trim();
         const errorEl = document.getElementById('login-error');
-
         if (!auth.currentUser) await initAuth();
 
         if (id === 'admin' && pass === 'admin123') {
@@ -255,6 +229,7 @@
             showMain();
         } else {
             try {
+                // Rule 1 Public Data path
                 const q = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'users'));
                 const found = q.docs.find(d => d.data().userId === id && d.data().password === pass);
                 if (found) {
@@ -267,17 +242,15 @@
     };
 
     const showMain = () => {
-        views.login.classList.add('hidden'); views.main.classList.remove('hidden');
+        document.getElementById('login-view').classList.add('hidden');
+        document.getElementById('main-view').classList.remove('hidden');
         initDashboard();
     };
-
-    document.getElementById('btn-login').onclick = login;
-    document.getElementById('btn-logout').onclick = () => { auth.signOut(); localStorage.clear(); location.reload(); };
 
     function initDashboard() {
         userRole = localStorage.getItem('portal_role') || 'user';
         activeUserId = localStorage.getItem('portal_id');
-        document.getElementById('display-user-role').innerText = `SYSTEM ACTIVE (${activeUserId})`;
+        document.getElementById('display-user-role').innerText = `ROLE: ${userRole.toUpperCase()} (${activeUserId})`;
         if (userRole === 'admin') document.getElementById('admin-panel').classList.remove('hidden');
         setupListeners();
     }
@@ -317,158 +290,73 @@
         if (user) { if (localStorage.getItem('portal_id')) showMain(); } else { await initAuth(); }
     });
 
-    document.getElementById('add-user').onclick = async () => {
-        const id = document.getElementById('new-user-id').value.trim();
-        const pass = document.getElementById('new-user-pass').value.trim();
-        if (!id || !pass) return;
-        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'users'), { userId: id, password: pass, createdAt: Date.now(), allowedDocs: [] });
-        document.getElementById('new-user-id').value = ''; document.getElementById('new-user-pass').value = '';
-    };
-
-    function renderUserList() {
-        userListEl.innerHTML = usersList.map(u => `
-            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-3">
-                <div class="flex items-center justify-between"><span class="text-xs font-bold text-blue-400">${u.userId}</span><button onclick="deleteUser('${u.id}')" class="text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div>
-                <div class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Assign Access:</div>
-                <div class="grid grid-cols-1 gap-1 max-h-32 overflow-y-auto custom-scrollbar p-1">
-                    ${knowledgeBase.map(d => `<label class="flex items-center gap-2 p-1.5 rounded bg-slate-950 border border-slate-800 cursor-pointer hover:border-blue-500/50 transition-all"><input type="checkbox" class="w-3 h-3 accent-blue-600" ${u.allowedDocs?.includes(d.id) ? 'checked' : ''} onchange="toggleUserDoc('${u.id}', '${d.id}')"><span class="text-[9px] truncate text-slate-300">${d.name}</span></label>`).join('')}
-                </div>
-            </div>
-        `).join('');
-        lucide.createIcons();
-    }
-
-    window.toggleUserDoc = async (uid, docId) => {
-        const user = usersList.find(u => u.id === uid);
-        const ref = doc(db, 'artifacts', appId, 'public', 'data', 'users', uid);
-        if (user.allowedDocs?.includes(docId)) await updateDoc(ref, { allowedDocs: arrayRemove(docId) });
-        else await updateDoc(ref, { allowedDocs: arrayUnion(docId) });
-    };
-
-    window.deleteUser = async (id) => { if (!auth.currentUser) return; if (confirm("Delete user?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'users', id)); };
-
-    function renderDocList() {
-        const uId = localStorage.getItem('portal_id');
-        const userFound = usersList.find(u => u.userId === uId);
-        let visibleDocs = userRole === 'admin' ? knowledgeBase : knowledgeBase.filter(d => userFound?.allowedDocs?.includes(d.id));
-        
-        docListEl.innerHTML = visibleDocs.map(d => `
-            <div class="group flex flex-col gap-2 p-3 rounded-xl border border-slate-800 cursor-pointer doc-item transition-all ${selectedDocIds.has(d.id) ? 'selected' : ''}" onclick="toggleDocSelection('${d.id}')">
-                <div class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4 rounded accent-blue-600 pointer-events-none" ${selectedDocIds.has(d.id) ? 'checked' : ''}><p class="text-[11px] font-bold truncate flex-1">${d.name}</p>${userRole === 'admin' ? `<button onclick="event.stopPropagation(); deleteDocById('${d.id}')" class="opacity-0 group-hover:opacity-100 text-red-500 transition-all"><i data-lucide="trash-2" class="w-3 h-3"></i></button>` : ''}</div>
-                ${selectedDocIds.has(d.id) ? `<div class="space-y-1.5" onclick="event.stopPropagation()"><textarea placeholder="Role..." id="instr-${d.id}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-[9px] text-slate-400 h-16 resize-none outline-none focus:border-blue-500">${d.role || ''}</textarea><button onclick="updateDocRole('${d.id}')" class="w-full bg-blue-600/20 text-blue-400 py-1 rounded text-[9px] font-bold hover:bg-blue-600 hover:text-white uppercase transition-all">Save Role</button></div>` : ''}
-            </div>
-        `).join('');
-        lucide.createIcons();
-    }
-
-    window.toggleDocSelection = (id) => { if (selectedDocIds.has(id)) selectedDocIds.delete(id); else selectedDocIds.add(id); renderDocList(); };
-    window.updateDocRole = async (id) => { if (!auth.currentUser) return; const val = document.getElementById(`instr-${id}`).value; await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'knowledge', id), { role: val }); renderDocList(); };
-    document.getElementById('select-all-docs').onclick = () => { if (selectedDocIds.size === knowledgeBase.length && knowledgeBase.length > 0) selectedDocIds.clear(); else knowledgeBase.forEach(d => selectedDocIds.add(d.id)); renderDocList(); };
-    window.deleteDocById = async (id) => { if (!auth.currentUser) return; if (confirm("Delete document?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'knowledge', id)); };
-
-    function renderChat() {
-        if (messages.length > 0) {
-            chatBox.innerHTML = messages.map(m => {
-                const isSelected = selectedChatIds.has(m.id);
-                const isSystem = m.sender === 'system';
-                const isUser = m.sender === 'user';
-                return `<div class="flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''} group animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div class="pt-2">
-                        <input type="checkbox" class="w-4 h-4 rounded accent-blue-600 cursor-pointer" ${isSelected ? 'checked' : ''} onchange="toggleChatSelection('${m.id}')">
-                    </div>
-                    <div class="max-w-[85%] md:max-w-[75%] rounded-3xl p-5 shadow-xl transition-all ${isSelected ? 'chat-bubble-selected ring-2 ring-blue-500' : ''} ${isUser ? 'bg-blue-600 text-white rounded-tr-none' : isSystem ? 'bg-slate-800/40 text-slate-400 italic text-xs' : 'bg-slate-900 border border-slate-800 rounded-tl-none'}">
-                        <div class="prose prose-invert prose-sm whitespace-pre-wrap">${m.text}</div>
-                        ${m.sender === 'ai' ? `<button onclick="speakText('${m.id}')" class="mt-4 p-2.5 hover:bg-slate-800 rounded-xl text-slate-500 transition-all"><i data-lucide="volume-2" class="w-4 h-4"></i></button>` : ''}
-                    </div>
-                </div>`;
-            }).join('');
-        } else { chatBox.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-center opacity-10"><i data-lucide="brain" class="w-24 h-24 mb-4 text-blue-400"></i><p class="text-3xl font-bold tracking-tighter text-slate-200">AI MIND PORTAL</p></div>`; }
-        lucide.createIcons(); chatBox.scrollTop = chatBox.scrollHeight; updateSelectionUI();
-    }
-
-    window.toggleChatSelection = (id) => { if (selectedChatIds.has(id)) selectedChatIds.delete(id); else selectedChatIds.add(id); renderChat(); };
-    function updateSelectionUI() { const ctrl = document.getElementById('selection-controls'); if (selectedChatIds.size > 0) ctrl.classList.remove('hidden'); else ctrl.classList.add('hidden'); }
-    document.getElementById('btn-cancel-selection').onclick = () => { selectedChatIds.clear(); renderChat(); };
-    
-    document.getElementById('btn-delete-selected').onclick = async () => {
-        if (!auth.currentUser || selectedChatIds.size === 0) return;
-        const chatColl = `chats_${activeUserId}`;
-        const ids = Array.from(selectedChatIds); selectedChatIds.clear();
-        for (let id of ids) { try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, id)); } catch(e) {} }
-    };
-
-    document.getElementById('btn-print-selected').onclick = () => {
-        const sel = messages.filter(m => selectedChatIds.has(m.id));
-        let content = "<html><body style='padding:40px; font-family:sans-serif;'><h1>Mind History</h1>";
-        sel.forEach(m => { content += `<div style='margin-bottom:30px; border-bottom:1px solid #eee; padding-bottom:10px;'><b style='color:#3b82f6;'>${m.sender.toUpperCase()}</b><div style='white-space:pre-wrap; line-height:1.6;'>${m.text}</div></div>`; });
-        content += "</body></html>";
-        const w = window.open('', '', 'height=600,width=800'); w.document.write(content); w.document.close(); w.print();
-    };
-
-    // --- REFINED AI CALLING ---
+    // --- REFINED AI LOGIC (TIMEOUT & ERROR PROTECTION) ---
     async function callAI(prompt, fileData = null, mimeType = null, isIndexing = false) {
         const masterInstr = document.getElementById('project-instructions').value;
         const selDocs = knowledgeBase.filter(d => selectedDocIds.has(d.id));
-        const docRoles = selDocs.map(d => d.role ? `[Role for ${d.name}: ${d.role}]` : '').join('\n');
+        const docRoles = selDocs.map(d => d.role ? `[Instruction for ${d.name}: ${d.role}]` : '').join('\n');
         const context = selDocs.map(d => `[Summary of ${d.name}: ${d.summary}]`).join('\n\n');
-        
         const isSearchEnabled = (searchMode !== 'doc' && !isIndexing);
-        const systemPrompt = `Role: ${masterInstr}\nKnowledge Context: ${context}\nDoc Instructions: ${docRoles}\n\nSTRICT: Mode is ${searchMode}. Answer only from context if doc mode. Format in paragraphs.`;
+        
+        const systemPrompt = `Master Role: ${masterInstr}\nDoc Roles: ${docRoles}\nKnowledge Context: ${context}\n\nMODE: ${searchMode}. Answer only from context if doc mode. Format in paragraphs. Be helpful.`;
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-        const payload = { contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: systemPrompt }] }, tools: isSearchEnabled ? [{ "google_search": {} }] : [] };
+        const payload = { 
+            contents: [{ parts: [{ text: prompt }] }], 
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            tools: isSearchEnabled ? [{ "google_search": {} }] : [] 
+        };
+
         if (fileData) payload.contents[0].parts.push({ inlineData: { mimeType, data: fileData } });
 
         let delay = 2000;
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 4; i++) {
             try {
                 const ctrl = new AbortController();
-                const tid = setTimeout(() => ctrl.abort(), 95000); 
+                const tid = setTimeout(() => ctrl.abort(), 110000); // 110 seconds for large docs
                 const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload), signal: ctrl.signal });
                 clearTimeout(tid);
-                if (!res.ok) throw new Error();
+                if (!res.ok) throw new Error("API fail");
                 const data = await res.json();
-                return { text: data.candidates?.[0]?.content?.parts?.[0]?.text || "System Error.", sources: [] };
+                return { text: data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.", sources: [] };
             } catch (e) {
-                if (i === 2) return { text: "Connection error. Badi file process karte waqt timeout ho sakta hai. Kripya choti file try karein ya internet check karein.", sources: [] };
+                if (i === 3) return { text: "Connection error. Badi file process karte waqt timeout ho sakta hai. Kripya choti file try karein ya internet check karein.", sources: [] };
                 await new Promise(r => setTimeout(r, delay)); delay *= 2;
             }
         }
     }
 
-    async function handleSend() {
-        const text = chatInput.value.trim(); if (!text || !auth.currentUser || !activeUserId) return;
-        chatInput.value = ''; const chatColl = `chats_${activeUserId}`;
+    // Handlers
+    document.getElementById('btn-login').onclick = login;
+    document.getElementById('btn-logout').onclick = () => { auth.signOut(); localStorage.clear(); location.reload(); };
+
+    document.getElementById('btn-send').onclick = async () => {
+        const text = document.getElementById('chat-input').value.trim();
+        if (!text || !auth.currentUser || !activeUserId) return;
+        document.getElementById('chat-input').value = '';
+        const chatColl = `chats_${activeUserId}`;
         
         await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text, sender: 'user', timestamp: Date.now() });
-        const procMsg = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: "Thinking...", sender: 'system', timestamp: Date.now() });
+        const thinkingMsg = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: "Thinking...", sender: 'system', timestamp: Date.now() });
         
         const res = await callAI(text);
         
-        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, procMsg.id));
+        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, thinkingMsg.id));
         await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: res.text, sender: 'ai', timestamp: Date.now() });
-    }
-
-    document.getElementById('btn-send').onclick = handleSend;
-    chatInput.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
-
-    document.getElementById('save-instructions').onclick = async (e) => {
-        if (!auth.currentUser) return;
-        const val = document.getElementById('project-instructions').value;
-        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'global'), { instructions: val });
-        e.target.classList.add('success-btn'); e.target.innerText = "SAVED!";
-        setTimeout(() => { e.target.classList.remove('success-btn'); e.target.innerText = "Update Master Role"; }, 2000);
     };
+
+    // Fix for iFrame upload trigger
+    document.getElementById('trigger-upload').onclick = () => document.getElementById('file-input').click();
 
     document.getElementById('file-input').onchange = async (e) => {
         const files = Array.from(e.target.files); if (!auth.currentUser || !activeUserId) return;
         const chatColl = `chats_${activeUserId}`;
         for (const file of files) {
             const reader = new FileReader();
-            const procBubble = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: `AI is analyzing document: ${file.name}... Please wait.`, sender: 'system', timestamp: Date.now() });
+            const procBubble = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: `AI is analyzing ${file.name}... Please wait.`, sender: 'system', timestamp: Date.now() });
             reader.onload = async (ev) => {
                 const b64 = ev.target.result.split(',')[1];
-                const res = await callAI(`Analyze and summarize this document carefully for the knowledge base: ${file.name}`, b64, file.type, true);
+                const res = await callAI(`Summarize this document fully so I can recall it: ${file.name}`, b64, file.type, true);
                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'knowledge'), { name: file.name, type: file.type, summary: res.text, role: '', timestamp: Date.now() });
                 await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, procBubble.id));
                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: `Upload successfully for "${file.name}". Now I am ready to chat.`, sender: 'ai', timestamp: Date.now() });
@@ -477,44 +365,77 @@
         }
     };
 
-    // Utils
+    // UI Renders
+    function renderChat() {
+        const chatBox = document.getElementById('chat-messages');
+        if (messages.length > 0) {
+            chatBox.innerHTML = messages.map(m => {
+                const isSelected = selectedChatIds.has(m.id);
+                const isUser = m.sender === 'user';
+                const isSystem = m.sender === 'system';
+                return `<div class="flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''} group">
+                    <div class="pt-2"><input type="checkbox" class="w-4 h-4 rounded accent-blue-600 cursor-pointer" ${isSelected ? 'checked' : ''} onchange="toggleChatSelection('${m.id}')"></div>
+                    <div class="max-w-[85%] md:max-w-[75%] rounded-3xl p-5 shadow-xl transition-all ${isSelected ? 'chat-bubble-selected ring-2 ring-blue-500' : ''} ${isUser ? 'bg-blue-600 text-white rounded-tr-none' : isSystem ? 'bg-slate-800/40 text-slate-400 italic text-xs' : 'bg-slate-900 border border-slate-800 rounded-tl-none'}">
+                        <div class="prose prose-invert prose-sm whitespace-pre-wrap">${m.text}</div>
+                        ${m.sender === 'ai' ? `<button onclick="speakText('${m.id}')" class="mt-4 p-2.5 hover:bg-slate-800 rounded-xl text-slate-500 transition-all"><i data-lucide="volume-2" class="w-4 h-4"></i></button>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        } else {
+            chatBox.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-center opacity-10"><i data-lucide="brain" class="w-24 h-24 mb-4 text-blue-400"></i><p class="text-3xl font-bold tracking-tighter">AI MIND PORTAL</p></div>`;
+        }
+        lucide.createIcons(); chatBox.scrollTop = chatBox.scrollHeight;
+        updateSelectionUI();
+    }
+
+    function renderUserList() {
+        const list = document.getElementById('user-list');
+        list.innerHTML = usersList.map(u => `
+            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-3">
+                <div class="flex items-center justify-between"><span class="text-xs font-bold text-blue-400">${u.userId}</span><button onclick="deleteUser('${u.id}')" class="text-red-500 hover:text-red-400 transition-all"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div>
+                <div class="grid grid-cols-1 gap-1 max-h-32 overflow-y-auto custom-scrollbar p-1">
+                    ${knowledgeBase.map(d => `<label class="flex items-center gap-2 p-1.5 rounded bg-slate-950 border border-slate-800 cursor-pointer transition-all"><input type="checkbox" class="w-3 h-3 accent-blue-600" ${u.allowedDocs?.includes(d.id) ? 'checked' : ''} onchange="toggleUserDoc('${u.id}', '${d.id}')"><span class="text-[9px] truncate text-slate-300">${d.name}</span></label>`).join('')}
+                </div>
+            </div>
+        `).join('');
+        lucide.createIcons();
+    }
+
+    function renderDocList() {
+        const uId = localStorage.getItem('portal_id');
+        const userFound = usersList.find(u => u.userId === uId);
+        let visibleDocs = userRole === 'admin' ? knowledgeBase : knowledgeBase.filter(d => userFound?.allowedDocs?.includes(d.id));
+        
+        document.getElementById('doc-list').innerHTML = visibleDocs.map(d => `
+            <div class="group flex flex-col gap-2 p-3 rounded-xl border border-slate-800 cursor-pointer doc-item transition-all ${selectedDocIds.has(d.id) ? 'selected' : ''}" onclick="toggleDocSelection('${d.id}')">
+                <div class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4 rounded accent-blue-600 pointer-events-none" ${selectedDocIds.has(d.id) ? 'checked' : ''}><p class="text-[11px] font-bold truncate flex-1">${d.name}</p>${userRole === 'admin' ? `<button onclick="event.stopPropagation(); deleteDocById('${d.id}')" class="opacity-0 group-hover:opacity-100 text-red-500 transition-all"><i data-lucide="trash-2" class="w-3 h-3"></i></button>` : ''}</div>
+                ${selectedDocIds.has(d.id) ? `<div class="space-y-1.5" onclick="event.stopPropagation()"><textarea id="instr-${d.id}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-[9px] text-slate-400 h-16 resize-none outline-none focus:border-blue-500" placeholder="Doc role...">${d.role || ''}</textarea><button onclick="updateDocRole('${d.id}')" class="w-full bg-blue-600/20 text-blue-400 py-1 rounded text-[9px] font-bold uppercase transition-all">Save</button></div>` : ''}
+            </div>
+        `).join('');
+        lucide.createIcons();
+    }
+
+    // Helper Functions
+    window.toggleChatSelection = (id) => { if (selectedChatIds.has(id)) selectedChatIds.delete(id); else selectedChatIds.add(id); renderChat(); };
+    function updateSelectionUI() { const ctrl = document.getElementById('selection-controls'); if (selectedChatIds.size > 0) ctrl.classList.remove('hidden'); else ctrl.classList.add('hidden'); }
+    window.toggleDocSelection = (id) => { if (selectedDocIds.has(id)) selectedDocIds.delete(id); else selectedDocIds.add(id); renderDocList(); };
+    window.deleteUser = async (id) => { if (!auth.currentUser) return; await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'users', id)); };
+    window.deleteDocById = async (id) => { if (!auth.currentUser) return; await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'knowledge', id)); };
+    window.updateDocRole = async (id) => { const val = document.getElementById(`instr-${id}`).value; await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'knowledge', id), { role: val }); renderDocList(); };
+    
+    document.getElementById('btn-delete-selected').onclick = async () => {
+        if (!auth.currentUser || selectedChatIds.size === 0) return;
+        const chatColl = `chats_${activeUserId}`;
+        const ids = Array.from(selectedChatIds); selectedChatIds.clear();
+        for (let id of ids) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, id));
+    };
+
     document.getElementById('theme-toggle').onclick = () => {
-        document.body.classList.toggle('light-mode'); currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        document.getElementById('theme-toggle').innerHTML = `<i data-lucide="${currentTheme === 'dark' ? 'sun' : 'moon'}" class="w-5 h-5"></i>`;
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        document.getElementById('theme-toggle').innerHTML = `<i data-lucide="${isLight ? 'moon' : 'sun'}" class="w-5 h-5"></i>`;
         lucide.createIcons();
     };
-
-    document.getElementById('export-docx').onclick = async () => {
-        const { Document, Packer, Paragraph, TextRun } = docx;
-        const ch = messages.map(m => {
-            const pArr = m.text.split('\n').filter(x => x.trim() !== '');
-            return pArr.map(y => new Paragraph({ children: [new TextRun({ text: `${m.sender.toUpperCase()}: `, bold: true }), new TextRun(y)], spacing: { after: 200 } }));
-        }).flat();
-        const dObj = new Document({ sections: [{ children: ch }] });
-        const blob = await Packer.toBlob(dObj);
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = "history.docx"; link.click();
-    };
-
-    document.getElementById('export-pdf').onclick = () => {
-        const { jsPDF } = window.jspdf; const p = new jsPDF(); let y = 20;
-        messages.forEach(m => {
-            p.setFont("helvetica", "bold"); p.text(`${m.sender.toUpperCase()}:`, 15, y);
-            p.setFont("helvetica", "normal"); const ls = p.splitTextToSize(m.text, 180);
-            ls.forEach(l => { if (y > 275) { p.addPage(); y = 20; } p.text(l, 15, y + 8); y += 8; }); y += 12;
-        }); p.save("history.pdf");
-    };
-
-    window.speakText = (id) => {
-        const msg = messages.find(m => m.id === id); if (!msg) return; synthesis.cancel();
-        const u = new SpeechSynthesisUtterance(msg.text); u.lang = 'hi-IN';
-        document.getElementById('btn-audio-stop').classList.remove('hidden');
-        u.onend = () => document.getElementById('btn-audio-stop').classList.add('hidden'); synthesis.speak(u);
-    };
-
-    document.getElementById('btn-audio-stop').onclick = () => { synthesis.cancel(); document.getElementById('btn-audio-stop').classList.add('hidden'); };
-    const rc = new (window.SpeechRecognition || window.webkitSpeechRecognition)(); rc.lang = 'hi-IN';
-    document.getElementById('btn-mic').onclick = () => { rc.start(); document.getElementById('btn-mic').classList.add('text-red-500', 'animate-pulse'); };
-    rc.onresult = (ev) => { chatInput.value = ev.results[0][0].transcript; document.getElementById('btn-mic').classList.remove('text-red-500', 'animate-pulse'); };
 
     document.querySelectorAll('.search-mode-btn').forEach(btn => {
         btn.onclick = (e) => {
@@ -524,6 +445,7 @@
             document.getElementById('current-search-label').innerText = `${searchMode.toUpperCase()} MODE`;
         };
     });
+
 </script>
 </body>
 </html>
