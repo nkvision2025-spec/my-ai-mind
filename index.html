@@ -42,9 +42,9 @@
     <!-- Notification Modal -->
     <div id="custom-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full shadow-2xl">
-            <h4 id="modal-title" class="text-lg font-bold mb-2 text-white">Message</h4>
-            <p id="modal-body" class="text-slate-400 text-sm mb-6"></p>
-            <button id="modal-close" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm text-white font-bold transition-all uppercase tracking-wider">Samajh Gaya</button>
+            <h4 id="modal-title" class="text-lg font-bold mb-2 text-white text-center">Message</h4>
+            <p id="modal-body" class="text-slate-400 text-sm mb-6 text-center"></p>
+            <button id="modal-close" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm text-white font-bold transition-all uppercase">OK</button>
         </div>
     </div>
 
@@ -52,37 +52,28 @@
     <div id="login-view" class="flex-1 flex items-center justify-center p-4">
         <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-10 rounded-[2.5rem] shadow-2xl text-white text-center">
             <div class="flex flex-col items-center mb-8">
-                <div class="p-5 bg-blue-600/20 rounded-3xl mb-4">
+                <div class="p-4 bg-blue-600/20 rounded-3xl mb-4">
                     <i data-lucide="brain-circuit" class="w-12 h-12 text-blue-500"></i>
                 </div>
-                <h1 class="text-3xl font-bold tracking-tight">AI Mind Pro</h1>
-                <p class="text-slate-500 text-sm mt-1">Apna Secure Portal Access Karein</p>
+                <h1 class="text-2xl font-bold">Project Mind Login</h1>
+                <p class="text-slate-400 text-sm">Secure Portal Access</p>
             </div>
-            <div class="space-y-5 text-left">
-                <div class="space-y-1.5">
-                    <label class="text-[10px] uppercase font-bold text-slate-500 ml-2 tracking-widest">User ID</label>
-                    <input type="text" id="login-id" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-4 outline-none focus:ring-2 ring-blue-500/50 transition-all text-white" placeholder="admin or user_id">
-                </div>
-                <div class="space-y-1.5">
-                    <label class="text-[10px] uppercase font-bold text-slate-500 ml-2 tracking-widest">Password</label>
-                    <input type="password" id="login-pass" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-4 outline-none focus:ring-2 ring-blue-500/50 transition-all text-white" placeholder="••••••••">
-                </div>
-                <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-blue-600/30 flex items-center justify-center gap-2 group">
-                    <span>Login Karein</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-                </button>
+            <div class="space-y-4 text-left">
+                <input type="text" id="login-id" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 outline-none focus:border-blue-500 text-white" placeholder="User ID">
+                <input type="password" id="login-pass" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 outline-none focus:border-blue-500 text-white" placeholder="Password">
+                <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20">Login</button>
                 <p id="login-error" class="text-red-400 text-xs text-center hidden italic">Invalid Credentials!</p>
             </div>
         </div>
     </div>
 
-    <!-- Main Dashboard -->
+    <!-- Main View -->
     <div id="main-view" class="hidden flex-1 flex overflow-hidden">
         <aside class="sidebar w-80 flex flex-col hidden md:flex shadow-2xl relative">
-            <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <i data-lucide="brain-circuit" class="w-6 h-6 text-blue-500"></i>
-                    <span class="font-bold tracking-tight text-white text-lg">AI Mind Pro</span>
+                    <span class="font-bold tracking-tight text-white">AI Mind Pro</span>
                 </div>
                 <button id="btn-logout" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-[10px] font-bold transition-all border border-red-500/20">
                     <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout
@@ -90,33 +81,33 @@
             </div>
 
             <div class="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-6">
-                <!-- Role Setting -->
+                <!-- Role -->
                 <div id="role-section" class="space-y-2">
-                    <h3 class="text-[10px] font-bold text-slate-500 uppercase px-2 flex items-center gap-2 tracking-widest">
-                        <i data-lucide="settings" class="w-3 h-3 text-blue-500"></i> Master Role
+                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2 flex items-center gap-2">
+                        <i data-lucide="settings" class="w-3 h-3"></i> Project Role
                     </h3>
                     <textarea id="project-instructions" rows="3" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm outline-none focus:border-blue-500 resize-none transition-all text-slate-200" placeholder="AI ko instructions dein..."></textarea>
-                    <button id="save-instructions" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-[10px] py-2.5 rounded-lg transition-all font-bold uppercase">Update Role</button>
+                    <button id="save-instructions" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs py-2.5 rounded-lg transition-all font-bold">Update Master Role</button>
                 </div>
 
-                <!-- Admin: User Management -->
-                <div id="admin-panel" class="space-y-4 border-t border-slate-800 pt-5 hidden">
-                    <h3 class="text-[10px] font-bold text-slate-500 uppercase px-2 tracking-widest">Users Control</h3>
-                    <div class="bg-slate-900/40 p-4 rounded-2xl border border-slate-800 space-y-2">
-                        <input type="text" id="new-user-id" placeholder="New ID" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none text-white">
-                        <input type="password" id="new-user-pass" placeholder="New Password" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none text-white">
-                        <button id="add-user" class="w-full bg-blue-600 text-white text-[10px] py-2.5 rounded-lg font-bold hover:bg-blue-500 uppercase">Add New User</button>
+                <!-- User Management -->
+                <div id="admin-panel" class="space-y-4 border-t border-slate-800 pt-4 hidden">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2">Users Manager</h3>
+                    <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800 space-y-2">
+                        <input type="text" id="new-user-id" placeholder="New ID" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none text-white">
+                        <input type="password" id="new-user-pass" placeholder="New Pass" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none text-white">
+                        <button id="add-user" class="w-full bg-blue-600 text-white text-[10px] py-2 rounded-lg font-bold">Create User</button>
                     </div>
-                    <div id="user-list" class="space-y-3 max-h-64 overflow-y-auto custom-scrollbar"></div>
+                    <div id="user-list" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar"></div>
                 </div>
 
-                <!-- Knowledge Base -->
-                <div class="space-y-2 border-t border-slate-800 pt-5">
-                    <h3 class="text-[10px] font-bold text-slate-500 uppercase px-2 flex items-center justify-between tracking-widest">
-                        Knowledge Base
+                <!-- Docs -->
+                <div class="space-y-2 border-t border-slate-800 pt-4">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2 flex items-center justify-between">
+                        Documents
                         <div class="flex items-center gap-2">
-                            <button id="select-all-docs" class="text-[9px] text-blue-500 hover:underline">All</button>
-                            <button onclick="document.getElementById('file-input').click()" class="p-1 text-blue-500 hover:text-blue-400 bg-blue-500/10 rounded-md transition-all"><i data-lucide="plus" class="w-3.5 h-3.5"></i></button>
+                            <button id="select-all-docs" class="text-[10px] text-blue-500 hover:underline">Select All</button>
+                            <button onclick="document.getElementById('file-input').click()" class="text-blue-500 hover:text-blue-400 transition-all"><i data-lucide="plus" class="w-4 h-4"></i></button>
                         </div>
                     </h3>
                     <input type="file" id="file-input" class="hidden" multiple accept=".pdf,.doc,.docx,.txt,image/*">
@@ -124,28 +115,29 @@
                 </div>
             </div>
 
+            <!-- Mode Selector -->
             <div class="p-4 border-t border-slate-800 bg-slate-950/20">
-                <div class="flex p-1 bg-slate-900/80 rounded-xl gap-1 border border-slate-800 overflow-hidden">
-                    <button data-mode="doc" class="search-mode-btn flex-1 py-2 text-[9px] rounded-lg font-bold bg-blue-600 text-white transition-all uppercase">Docs</button>
-                    <button data-mode="web" class="search-mode-btn flex-1 py-2 text-[9px] rounded-lg font-bold text-slate-500 hover:bg-slate-800 transition-all uppercase">Web</button>
-                    <button data-mode="both" class="search-mode-btn flex-1 py-2 text-[9px] rounded-lg font-bold text-slate-500 hover:bg-slate-800 transition-all uppercase">Both</button>
+                <div class="flex p-1 bg-slate-900/80 rounded-xl gap-1 border border-slate-800">
+                    <button data-mode="doc" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold bg-blue-600 text-white transition-all uppercase">Docs</button>
+                    <button data-mode="web" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500 hover:bg-slate-800 transition-all uppercase">Web</button>
+                    <button data-mode="both" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500 hover:bg-slate-800 transition-all uppercase">Both</button>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Chat Area -->
+        <!-- Chat Area -->
         <main class="flex-1 flex flex-col relative bg-slate-900/30">
             <header class="h-16 border-b border-slate-800 flex items-center justify-between px-6 backdrop-blur-md sticky top-0 z-10">
                 <div class="flex items-center gap-3">
                     <div id="status-indicator" class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-                    <span id="display-user-role" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active System</span>
+                    <span id="display-user-role" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Active System</span>
                 </div>
                 
                 <div class="flex items-center gap-2">
                     <div id="selection-controls" class="hidden flex items-center gap-2 mr-4 pr-4 border-r border-slate-800">
-                        <button id="btn-delete-selected" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg flex items-center gap-1.5 text-[9px] font-bold uppercase transition-all"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete</button>
-                        <button id="btn-print-selected" class="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg flex items-center gap-1.5 text-[9px] font-bold uppercase transition-all"><i data-lucide="printer" class="w-3.5 h-3.5"></i> Print</button>
-                        <button id="btn-cancel-selection" class="p-2 text-slate-500 hover:bg-slate-800 rounded-lg text-[9px] font-bold uppercase">Cancel</button>
+                        <button id="btn-delete-selected" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg flex items-center gap-1.5 text-[10px] font-bold transition-all uppercase">Delete</button>
+                        <button id="btn-print-selected" class="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg flex items-center gap-1.5 text-[10px] font-bold transition-all uppercase">Print</button>
+                        <button id="btn-cancel-selection" class="p-2 text-slate-500 hover:bg-slate-800 rounded-lg text-[10px] font-bold uppercase">Cancel</button>
                     </div>
 
                     <button id="theme-toggle" class="p-2.5 hover:bg-slate-800/50 rounded-full text-slate-400 transition-all"><i data-lucide="sun" class="w-5 h-5"></i></button>
@@ -155,8 +147,8 @@
                 </div>
             </header>
 
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 md:p-10 space-y-8 custom-scrollbar">
-                <div class="h-full flex flex-col items-center justify-center text-center opacity-10 select-none">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 custom-scrollbar">
+                <div class="h-full flex flex-col items-center justify-center text-center opacity-10">
                     <i data-lucide="brain" class="w-24 h-24 mb-4"></i>
                     <p class="text-3xl font-bold tracking-tighter">AI MIND PORTAL</p>
                 </div>
@@ -165,7 +157,7 @@
             <div class="p-6 bg-gradient-to-t from-slate-950/20 to-transparent">
                 <div class="max-w-4xl mx-auto">
                     <div class="relative bg-slate-900/90 border border-slate-800 rounded-[2.5rem] p-3 shadow-2xl backdrop-blur-xl">
-                        <textarea id="chat-input" rows="1" class="w-full bg-transparent border-none outline-none py-4 px-6 resize-none text-slate-200 placeholder:text-slate-500 max-h-48 scrollbar-none" placeholder="Sawal puchein..."></textarea>
+                        <textarea id="chat-input" rows="1" class="w-full bg-transparent border-none outline-none py-3 px-6 resize-none text-slate-200 placeholder:text-slate-500 max-h-40 scrollbar-none" placeholder="Ask a question..."></textarea>
                         
                         <div class="flex items-center justify-between px-3 pb-1 pt-1 border-t border-slate-800/50 mt-2">
                             <div class="flex items-center gap-2">
@@ -173,7 +165,7 @@
                                 <button id="btn-audio-stop" class="p-3 text-red-400 bg-red-500/10 rounded-2xl hidden"><i data-lucide="square" class="w-4 h-4"></i></button>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span id="current-search-label" class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">DOCS ONLY</span>
+                                <span id="current-search-label" class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">DOCS ONLY</span>
                                 <button id="btn-send" class="bg-blue-600 hover:bg-blue-500 text-white p-3.5 rounded-2xl transition-all shadow-lg shadow-blue-600/30 group">
                                     <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-0.5 transition-transform"></i>
                                 </button>
@@ -251,9 +243,7 @@
         const id = document.getElementById('login-id').value.trim();
         const pass = document.getElementById('login-pass').value.trim();
         const errorEl = document.getElementById('login-error');
-
         if (!auth.currentUser) await initAuth();
-
         if (id === 'admin' && pass === 'admin123') {
             userRole = 'admin'; activeUserId = 'admin';
             localStorage.setItem('portal_role', 'admin'); localStorage.setItem('portal_id', 'admin');
@@ -272,8 +262,7 @@
     };
 
     const showMain = () => {
-        views.login.classList.add('hidden');
-        views.main.classList.remove('hidden');
+        views.login.classList.add('hidden'); views.main.classList.remove('hidden');
         initDashboard();
     };
 
@@ -289,35 +278,30 @@
     }
 
     let unsubSettings, unsubUsers, unsubKB, unsubChat;
-
     async function setupListeners() {
         if (!auth.currentUser || !activeUserId) return;
         if (unsubSettings) unsubSettings(); if (unsubUsers) unsubUsers(); if (unsubKB) unsubKB(); if (unsubChat) unsubChat();
-
         unsubSettings = onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'global'), (s) => {
             if (s.exists()) document.getElementById('project-instructions').value = s.data().instructions;
-        }, (err) => {});
-
+        });
         if (userRole === 'admin') {
             unsubUsers = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'users'), (snapshot) => {
                 usersList = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
                 renderUserList(); renderDocList();
-            }, (err) => {});
+            });
         } else {
             const q = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'users'));
             usersList = q.docs.map(d => ({ id: d.id, ...d.data() }));
         }
-
         unsubKB = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'knowledge'), (snapshot) => {
             knowledgeBase = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
             renderDocList(); if(userRole === 'admin') renderUserList();
-        }, (err) => {});
-
+        });
         const chatColl = `chats_${activeUserId}`;
         unsubChat = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', chatColl), (snapshot) => {
             messages = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => a.timestamp - b.timestamp);
             renderChat();
-        }, (err) => {});
+        });
     }
 
     onAuthStateChanged(auth, async (user) => {
@@ -327,7 +311,7 @@
     document.getElementById('add-user').onclick = async () => {
         const id = document.getElementById('new-user-id').value.trim();
         const pass = document.getElementById('new-user-pass').value.trim();
-        if (!id || !pass || !auth.currentUser) return;
+        if (!id || !pass) return;
         await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'users'), { userId: id, password: pass, createdAt: Date.now(), allowedDocs: [] });
         document.getElementById('new-user-id').value = ''; document.getElementById('new-user-pass').value = '';
     };
@@ -335,8 +319,8 @@
     function renderUserList() {
         userListEl.innerHTML = usersList.map(u => `
             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-3">
-                <div class="flex items-center justify-between"><span class="text-xs font-bold text-blue-400"><i data-lucide="user" class="inline w-3 h-3 mr-1"></i>${u.userId}</span><button onclick="deleteUser('${u.id}')" class="text-red-500 hover:text-red-400 transition-all"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div>
-                <div class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Access Control:</div>
+                <div class="flex items-center justify-between"><span class="text-xs font-bold text-blue-400">${u.userId}</span><button onclick="deleteUser('${u.id}')" class="text-red-500 hover:text-red-400 transition-all"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div>
+                <div class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Assign Access:</div>
                 <div class="grid grid-cols-1 gap-1 max-h-32 overflow-y-auto custom-scrollbar p-1">
                     ${knowledgeBase.map(d => `<label class="flex items-center gap-2 p-1.5 rounded bg-slate-950 border border-slate-800 cursor-pointer hover:border-blue-500/50 transition-all"><input type="checkbox" class="w-3 h-3 accent-blue-600" ${u.allowedDocs?.includes(d.id) ? 'checked' : ''} onchange="toggleUserDoc('${u.id}', '${d.id}')"><span class="text-[9px] truncate text-slate-300">${d.name}</span></label>`).join('')}
                 </div>
@@ -353,17 +337,16 @@
         else await updateDoc(ref, { allowedDocs: arrayUnion(docId) });
     };
 
-    window.deleteUser = async (id) => { if (!auth.currentUser) return; if (confirm("Delete this user?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'users', id)); };
+    window.deleteUser = async (id) => { if (!auth.currentUser) return; if (confirm("Delete user?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'users', id)); };
 
     function renderDocList() {
         const uId = localStorage.getItem('portal_id');
         const userFound = usersList.find(u => u.userId === uId);
         let visibleDocs = userRole === 'admin' ? knowledgeBase : knowledgeBase.filter(d => userFound?.allowedDocs?.includes(d.id));
-        
         docListEl.innerHTML = visibleDocs.map(d => `
             <div class="group flex flex-col gap-2 p-3 rounded-xl border border-slate-800 cursor-pointer doc-item transition-all ${selectedDocIds.has(d.id) ? 'selected' : ''}" onclick="toggleDocSelection('${d.id}')">
-                <div class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4 rounded accent-blue-600 pointer-events-none" ${selectedDocIds.has(d.id) ? 'checked' : ''}><p class="text-[11px] font-bold truncate flex-1">${d.name}</p>${userRole === 'admin' ? `<button onclick="event.stopPropagation(); deleteDocById('${d.id}')" class="opacity-0 group-hover:opacity-100 text-red-500 transition-all"><i data-lucide="trash-2" class="w-3 h-3"></i></button>` : ''}</div>
-                ${selectedDocIds.has(d.id) ? `<div class="space-y-1.5" onclick="event.stopPropagation()"><textarea placeholder="Instruction for this doc..." id="instr-${d.id}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-[9px] text-slate-400 h-16 resize-none outline-none focus:border-blue-500">${d.role || ''}</textarea><button onclick="updateDocRole('${d.id}')" class="w-full bg-blue-600/20 text-blue-400 py-1 rounded text-[9px] font-bold hover:bg-blue-600 hover:text-white transition-all uppercase">Save Role</button></div>` : ''}
+                <div class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4 rounded accent-blue-600 pointer-events-none" ${selectedDocIds.has(d.id) ? 'checked' : ''}><p class="text-[11px] font-bold truncate flex-1">${d.name}</p>${userRole === 'admin' ? `<button onclick="event.stopPropagation(); deleteDocById('${d.id}')" class="opacity-0 group-hover:opacity-100 text-red-500"><i data-lucide="trash-2" class="w-3 h-3"></i></button>` : ''}</div>
+                ${selectedDocIds.has(d.id) ? `<div class="space-y-1.5" onclick="event.stopPropagation()"><textarea placeholder="Instruction..." id="instr-${d.id}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-[9px] text-slate-400 h-16 resize-none outline-none">${d.role || ''}</textarea><button onclick="updateDocRole('${d.id}')" class="w-full bg-blue-600/20 text-blue-400 py-1 rounded text-[9px] font-bold hover:bg-blue-600 hover:text-white transition-all">Save Role</button></div>` : ''}
             </div>
         `).join('');
         lucide.createIcons();
@@ -395,7 +378,7 @@
         const chatColl = `chats_${activeUserId}`;
         const ids = Array.from(selectedChatIds); selectedChatIds.clear();
         for (let id of ids) { try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, id)); } catch(e) {} }
-        showMessage("Success", "Deleted successfully.");
+        showMessage("Success", "Selected messages deleted.");
     };
 
     document.getElementById('btn-print-selected').onclick = () => {
@@ -412,7 +395,7 @@
         const docRoles = selDocs.map(d => d.role ? `[Role for ${d.name}: ${d.role}]` : '').join('\n');
         const context = selDocs.map(d => `[Doc ${d.name} Summary: ${d.summary}]`).join('\n\n');
         const isSearchEnabled = (searchMode !== 'doc' && !isIndexing);
-        const systemPrompt = `Role: ${masterInstr}\nDoc Roles: ${docRoles}\nKnowledge: ${context}\n\nMODE: ${searchMode}. Answer using context. Format in paragraphs. Language: Hindi (Latin) or English.`;
+        const systemPrompt = `Role: ${masterInstr}\nDoc Roles: ${docRoles}\nKnowledge: ${context}\n\nMODE: ${searchMode}. Answer using context. Format output in paragraphs. Language: Hindi (Latin) or English.`;
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
         const payload = { contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: systemPrompt }] }, tools: isSearchEnabled ? [{ "google_search": {} }] : [] };
@@ -422,10 +405,9 @@
         for (let i = 0; i < 5; i++) {
             try {
                 const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
-                const text = await res.text();
                 if (!res.ok) throw new Error("API fail");
-                const data = JSON.parse(text);
-                return { text: data.candidates?.[0]?.content?.parts?.[0]?.text || "System Error.", sources: [] };
+                const data = await res.json();
+                return { text: data.candidates?.[0]?.content?.parts?.[0]?.text || "Error.", sources: [] };
             } catch (e) {
                 if (i === 4) return { text: "Connection error. Retrying...", sources: [] };
                 await new Promise(r => setTimeout(r, delay)); delay *= 2;
