@@ -28,14 +28,13 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-main); color: var(--text-main); transition: all 0.3s ease; }
         .sidebar { background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); }
         .custom-scrollbar::-webkit-scrollbar { width: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         .doc-item.selected { background: rgba(37, 99, 235, 0.15); border-color: #3b82f6; }
         .success-btn { background-color: #10b981 !important; }
         .chat-bubble-selected { ring: 2px solid #3b82f6; background: rgba(59, 130, 246, 0.1); }
         .prose p { margin-bottom: 1.25rem; line-height: 1.7; }
-        .loading-dots:after { content: ' .'; animation: dots 1.5s steps(5, end) infinite;}
-        @keyframes dots { 0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 40% { color: #3b82f6; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 60% { text-shadow: .25em 0 0 #3b82f6, .5em 0 0 rgba(0,0,0,0);} 80%, 100% { text-shadow: .25em 0 0 #3b82f6, .5em 0 0 #3b82f6;}}
+        .animate-thinking { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
     </style>
 </head>
 <body class="h-screen overflow-hidden">
@@ -44,9 +43,9 @@
     <!-- Notification Modal -->
     <div id="custom-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full shadow-2xl">
-            <h4 id="modal-title" class="text-lg font-bold mb-2 text-white">Message</h4>
-            <p id="modal-body" class="text-slate-400 text-sm mb-6"></p>
-            <button id="modal-close" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm text-white font-bold transition-all uppercase tracking-wider">OK</button>
+            <h4 id="modal-title" class="text-lg font-bold mb-2 text-white text-center">Notification</h4>
+            <p id="modal-body" class="text-slate-400 text-sm mb-6 text-center"></p>
+            <button id="modal-close" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm text-white font-bold transition-all uppercase">Theek Hai</button>
         </div>
     </div>
 
@@ -61,54 +60,55 @@
                 <p class="text-slate-400 text-sm">Secure Portal Access</p>
             </div>
             <div class="space-y-4 text-left">
-                <input type="text" id="login-id" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 outline-none focus:border-blue-500 text-white" placeholder="User ID">
+                <input type="text" id="login-id" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 outline-none focus:border-blue-500 text-white" placeholder="User ID (admin or user)">
                 <input type="password" id="login-pass" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 outline-none focus:border-blue-500 text-white" placeholder="Password">
-                <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20">Login</button>
-                <p id="login-error" class="text-red-400 text-xs text-center hidden italic">Invalid ID or Password!</p>
+                <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20">LOGIN</button>
+                <p id="login-error" class="text-red-400 text-xs text-center hidden italic">Aapki details sahi nahi hain!</p>
             </div>
         </div>
     </div>
 
     <!-- Main View -->
     <div id="main-view" class="hidden flex-1 flex overflow-hidden">
+        <!-- Sidebar -->
         <aside class="sidebar w-80 flex flex-col hidden md:flex shadow-2xl relative">
-            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
                 <div class="flex items-center gap-2">
                     <i data-lucide="brain-circuit" class="w-6 h-6 text-blue-500"></i>
                     <span class="font-bold tracking-tight text-white">AI Mind Pro</span>
                 </div>
                 <button id="btn-logout" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-[10px] font-bold transition-all border border-red-500/20">
-                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i> LOGOUT
                 </button>
             </div>
 
             <div class="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-6">
-                <!-- Project Role -->
+                <!-- Master Role -->
                 <div id="role-section" class="space-y-2">
                     <h3 class="text-xs font-bold text-slate-500 uppercase px-2 flex items-center gap-2 tracking-widest">
-                        <i data-lucide="settings" class="w-3 h-3"></i> Master Role
+                        <i data-lucide="settings" class="w-3 h-3 text-blue-500"></i> MASTER ROLE
                     </h3>
-                    <textarea id="project-instructions" rows="3" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm outline-none focus:border-blue-500 resize-none transition-all text-slate-200" placeholder="E.g. Law assistant..."></textarea>
-                    <button id="save-instructions" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs py-2.5 rounded-lg transition-all font-bold">Update master role</button>
+                    <textarea id="project-instructions" rows="3" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 text-sm outline-none focus:border-blue-500 resize-none transition-all text-slate-200" placeholder="AI ko instructions dein..."></textarea>
+                    <button id="save-instructions" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs py-2.5 rounded-lg transition-all font-bold">Update Master Role</button>
                 </div>
 
-                <!-- Admin panel -->
-                <div id="admin-panel" class="space-y-4 border-t border-slate-800 pt-4 hidden">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2">Users Control</h3>
-                    <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800 space-y-2">
+                <!-- Admin: User Management -->
+                <div id="admin-panel" class="space-y-4 border-t border-slate-800 pt-5 hidden">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2 tracking-widest">USERS MANAGER</h3>
+                    <div class="bg-slate-900/40 p-4 rounded-2xl border border-slate-800 space-y-2">
                         <input type="text" id="new-user-id" placeholder="New ID" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none text-white">
                         <input type="password" id="new-user-pass" placeholder="New Pass" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none text-white">
-                        <button id="add-user" class="w-full bg-blue-600 text-white text-[10px] py-2 rounded-lg font-bold">Add User</button>
+                        <button id="add-user" class="w-full bg-blue-600 text-white text-[10px] py-2 rounded-lg font-bold hover:bg-blue-500 uppercase">Add User</button>
                     </div>
                     <div id="user-list" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar"></div>
                 </div>
 
-                <!-- Document List -->
+                <!-- Knowledge Base -->
                 <div class="space-y-2 border-t border-slate-800 pt-4">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2 flex items-center justify-between">
-                        Knowledge base
+                    <h3 class="text-xs font-bold text-slate-500 uppercase px-2 flex items-center justify-between tracking-widest">
+                        DOCUMENTS BASE
                         <div class="flex items-center gap-2">
-                            <button id="select-all-docs" class="text-[10px] text-blue-500 hover:underline">Select All</button>
+                            <button id="select-all-docs" class="text-[10px] text-blue-500 hover:underline">All</button>
                             <button onclick="document.getElementById('file-input').click()" class="text-blue-500 hover:text-blue-400 transition-all"><i data-lucide="plus" class="w-4 h-4"></i></button>
                         </div>
                     </h3>
@@ -117,49 +117,50 @@
                 </div>
             </div>
 
+            <!-- Mode Selector -->
             <div class="p-4 border-t border-slate-800 bg-slate-950/20">
                 <div class="flex p-1 bg-slate-900/80 rounded-xl gap-1 border border-slate-800">
-                    <button data-mode="doc" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold bg-blue-600 text-white">DOCS ONLY</button>
-                    <button data-mode="web" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500 hover:bg-slate-800">WEB</button>
-                    <button data-mode="both" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500 hover:bg-slate-800">BOTH</button>
+                    <button data-mode="doc" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold bg-blue-600 text-white transition-all uppercase">Docs</button>
+                    <button data-mode="web" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500 hover:bg-slate-800 transition-all uppercase">Web</button>
+                    <button data-mode="both" class="search-mode-btn flex-1 py-2 text-[10px] rounded-lg font-bold text-slate-500 hover:bg-slate-800 transition-all uppercase">Both</button>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Chat -->
+        <!-- Chat Area -->
         <main class="flex-1 flex flex-col relative bg-slate-900/30">
             <header class="h-16 border-b border-slate-800 flex items-center justify-between px-6 backdrop-blur-md sticky top-0 z-10">
                 <div class="flex items-center gap-3">
                     <div id="status-indicator" class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-                    <span id="display-user-role" class="text-xs font-bold text-slate-400 uppercase tracking-widest tracking-tighter">System Online</span>
+                    <span id="display-user-role" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Active System</span>
                 </div>
                 
                 <div class="flex items-center gap-2">
+                    <!-- Selection Controls -->
                     <div id="selection-controls" class="hidden flex items-center gap-2 mr-4 pr-4 border-r border-slate-800">
-                        <button id="btn-delete-selected" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg flex items-center gap-1.5 text-[10px] font-bold transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i> Delete</button>
-                        <button id="btn-print-selected" class="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg flex items-center gap-1.5 text-[10px] font-bold transition-all"><i data-lucide="printer" class="w-4 h-4"></i> Print</button>
-                        <button id="btn-cancel-selection" class="p-2 text-slate-500 hover:bg-slate-800 rounded-lg text-[10px] font-bold">Cancel</button>
+                        <button id="btn-delete-selected" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg flex items-center gap-1.5 text-[10px] font-bold uppercase transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i> Delete</button>
+                        <button id="btn-print-selected" class="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg flex items-center gap-1.5 text-[10px] font-bold transition-all uppercase"><i data-lucide="printer" class="w-4 h-4"></i> Print</button>
+                        <button id="btn-cancel-selection" class="p-2 text-slate-500 hover:bg-slate-800 rounded-lg text-[10px] font-bold uppercase">Cancel</button>
                     </div>
 
                     <button id="theme-toggle" class="p-2.5 hover:bg-slate-800/50 rounded-full text-slate-400 transition-all"><i data-lucide="sun" class="w-5 h-5"></i></button>
                     <div class="w-px h-6 bg-slate-800 mx-1"></div>
-                    <button id="export-docx" class="p-2.5 hover:bg-blue-600/10 hover:text-blue-500 rounded-lg text-slate-400 transition-all" title="Word"><i data-lucide="file-text" class="w-5 h-5"></i></button>
-                    <button id="export-pdf" class="p-2.5 hover:bg-red-600/10 hover:text-red-500 rounded-lg text-slate-400 transition-all" title="PDF"><i data-lucide="file-type-2" class="w-5 h-5"></i></button>
+                    <button id="export-docx" class="p-2.5 hover:bg-blue-600/10 hover:text-blue-500 rounded-lg text-slate-400 transition-all"><i data-lucide="file-text" class="w-5 h-5"></i></button>
+                    <button id="export-pdf" class="p-2.5 hover:bg-red-600/10 hover:text-red-500 rounded-lg text-slate-400 transition-all"><i data-lucide="file-type-2" class="w-5 h-5"></i></button>
                 </div>
             </header>
 
-            <!-- Messages Container -->
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 md:p-10 space-y-6 custom-scrollbar">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 custom-scrollbar">
                 <div class="h-full flex flex-col items-center justify-center text-center opacity-10 select-none">
                     <i data-lucide="brain" class="w-24 h-24 mb-4 text-blue-400"></i>
-                    <p class="text-3xl font-bold tracking-tighter text-slate-200">AI MIND PORTAL</p>
+                    <p class="text-3xl font-bold tracking-tighter">AI MIND PORTAL</p>
                 </div>
             </div>
 
-            <!-- Typing Area -->
-            <div class="p-6">
+            <!-- Input Bar -->
+            <div class="p-6 bg-gradient-to-t from-slate-950/20 to-transparent">
                 <div class="max-w-4xl mx-auto">
-                    <div id="chat-form" class="relative bg-slate-900/90 border border-slate-800 rounded-[2.5rem] p-3 shadow-2xl backdrop-blur-xl">
+                    <div class="relative bg-slate-900/90 border border-slate-800 rounded-[2.5rem] p-3 shadow-2xl backdrop-blur-xl">
                         <textarea id="chat-input" rows="1" class="w-full bg-transparent border-none outline-none py-3 px-6 resize-none text-slate-200 placeholder:text-slate-500 max-h-40 scrollbar-none" placeholder="Koi sawal puchein..."></textarea>
                         
                         <div class="flex items-center justify-between px-3 pb-1 pt-1 border-t border-slate-800/50 mt-2">
@@ -168,7 +169,7 @@
                                 <button id="btn-audio-stop" class="p-3 text-red-400 bg-red-500/10 rounded-2xl hidden"><i data-lucide="square" class="w-4 h-4"></i></button>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span id="current-search-label" class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">DOCS ONLY</span>
+                                <span id="current-search-label" class="text-[10px] text-slate-500 font-bold uppercase tracking-tighter tracking-widest">DOCS ONLY</span>
                                 <button id="btn-send" class="bg-blue-600 hover:bg-blue-500 text-white p-3.5 rounded-2xl transition-all shadow-lg shadow-blue-600/30 group">
                                     <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-0.5 transition-transform"></i>
                                 </button>
@@ -184,9 +185,9 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, onSnapshot, doc, setDoc, deleteDoc, getDocs, updateDoc, arrayUnion, arrayRemove, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, onSnapshot, doc, setDoc, deleteDoc, getDocs, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // --- YOUR SECURE CONFIGURATION ---
+    // --- INTEGRATED CONFIGURATION ---
     const firebaseConfig = {
         apiKey: "AIzaSyDMTbWH8sKrNOp9LdH-4EufDjMukeELNoY",
         authDomain: "myai-mind.firebaseapp.com",
@@ -195,7 +196,6 @@
         messagingSenderId: "79456867450",
         appId: "1:79456867450:web:2b2a1eec01c7b420cb97c3"
     };
-
     const apiKey = "AIzaSyAxJiKA_Xo5YXjIiLMuIa1Qgk9sp5G-V2o"; 
     const appId = 'html-ai-mind-001';
 
@@ -246,6 +246,7 @@
         const id = document.getElementById('login-id').value.trim();
         const pass = document.getElementById('login-pass').value.trim();
         const errorEl = document.getElementById('login-error');
+
         if (!auth.currentUser) await initAuth();
 
         if (id === 'admin' && pass === 'admin123') {
@@ -266,8 +267,7 @@
     };
 
     const showMain = () => {
-        views.login.classList.add('hidden');
-        views.main.classList.remove('hidden');
+        views.login.classList.add('hidden'); views.main.classList.remove('hidden');
         initDashboard();
     };
 
@@ -317,7 +317,6 @@
         if (user) { if (localStorage.getItem('portal_id')) showMain(); } else { await initAuth(); }
     });
 
-    // Admin UI
     document.getElementById('add-user').onclick = async () => {
         const id = document.getElementById('new-user-id').value.trim();
         const pass = document.getElementById('new-user-pass').value.trim();
@@ -330,9 +329,9 @@
         userListEl.innerHTML = usersList.map(u => `
             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-3">
                 <div class="flex items-center justify-between"><span class="text-xs font-bold text-blue-400">${u.userId}</span><button onclick="deleteUser('${u.id}')" class="text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div>
-                <div class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Doc Access:</div>
-                <div class="grid grid-cols-1 gap-1 max-h-32 overflow-y-auto custom-scrollbar">
-                    ${knowledgeBase.map(d => `<label class="flex items-center gap-2 p-1.5 rounded bg-slate-950 border border-slate-800 cursor-pointer"><input type="checkbox" class="w-3 h-3 accent-blue-600" ${u.allowedDocs?.includes(d.id) ? 'checked' : ''} onchange="toggleUserDoc('${u.id}', '${d.id}')"><span class="text-[9px] truncate text-slate-300">${d.name}</span></label>`).join('')}
+                <div class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Assign Access:</div>
+                <div class="grid grid-cols-1 gap-1 max-h-32 overflow-y-auto custom-scrollbar p-1">
+                    ${knowledgeBase.map(d => `<label class="flex items-center gap-2 p-1.5 rounded bg-slate-950 border border-slate-800 cursor-pointer hover:border-blue-500/50 transition-all"><input type="checkbox" class="w-3 h-3 accent-blue-600" ${u.allowedDocs?.includes(d.id) ? 'checked' : ''} onchange="toggleUserDoc('${u.id}', '${d.id}')"><span class="text-[9px] truncate text-slate-300">${d.name}</span></label>`).join('')}
                 </div>
             </div>
         `).join('');
@@ -352,10 +351,11 @@
         const uId = localStorage.getItem('portal_id');
         const userFound = usersList.find(u => u.userId === uId);
         let visibleDocs = userRole === 'admin' ? knowledgeBase : knowledgeBase.filter(d => userFound?.allowedDocs?.includes(d.id));
+        
         docListEl.innerHTML = visibleDocs.map(d => `
             <div class="group flex flex-col gap-2 p-3 rounded-xl border border-slate-800 cursor-pointer doc-item transition-all ${selectedDocIds.has(d.id) ? 'selected' : ''}" onclick="toggleDocSelection('${d.id}')">
-                <div class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4 rounded accent-blue-600 pointer-events-none" ${selectedDocIds.has(d.id) ? 'checked' : ''}><p class="text-[11px] font-bold truncate flex-1">${d.name}</p>${userRole === 'admin' ? `<button onclick="event.stopPropagation(); deleteDocById('${d.id}')" class="opacity-0 group-hover:opacity-100 text-red-500"><i data-lucide="trash-2" class="w-3 h-3"></i></button>` : ''}</div>
-                ${selectedDocIds.has(d.id) ? `<div class="space-y-1.5" onclick="event.stopPropagation()"><textarea placeholder="Doc role..." id="instr-${d.id}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-[9px] text-slate-400 h-16 resize-none outline-none">${d.role || ''}</textarea><button onclick="updateDocRole('${d.id}')" class="w-full bg-blue-600/20 text-blue-400 py-1 rounded text-[9px] font-bold hover:bg-blue-600 hover:text-white transition-all uppercase">Save</button></div>` : ''}
+                <div class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4 rounded accent-blue-600 pointer-events-none" ${selectedDocIds.has(d.id) ? 'checked' : ''}><p class="text-[11px] font-bold truncate flex-1">${d.name}</p>${userRole === 'admin' ? `<button onclick="event.stopPropagation(); deleteDocById('${d.id}')" class="opacity-0 group-hover:opacity-100 text-red-500 transition-all"><i data-lucide="trash-2" class="w-3 h-3"></i></button>` : ''}</div>
+                ${selectedDocIds.has(d.id) ? `<div class="space-y-1.5" onclick="event.stopPropagation()"><textarea placeholder="Role..." id="instr-${d.id}" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-[9px] text-slate-400 h-16 resize-none outline-none focus:border-blue-500">${d.role || ''}</textarea><button onclick="updateDocRole('${d.id}')" class="w-full bg-blue-600/20 text-blue-400 py-1 rounded text-[9px] font-bold hover:bg-blue-600 hover:text-white uppercase transition-all">Save Role</button></div>` : ''}
             </div>
         `).join('');
         lucide.createIcons();
@@ -382,7 +382,7 @@
                     </div>
                 </div>`;
             }).join('');
-        } else { chatBox.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-center opacity-10"><i data-lucide="brain" class="w-24 h-24 mb-4"></i><p class="text-3xl font-bold tracking-tighter text-slate-200">AI MIND PORTAL</p></div>`; }
+        } else { chatBox.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-center opacity-10"><i data-lucide="brain" class="w-24 h-24 mb-4 text-blue-400"></i><p class="text-3xl font-bold tracking-tighter text-slate-200">AI MIND PORTAL</p></div>`; }
         lucide.createIcons(); chatBox.scrollTop = chatBox.scrollHeight; updateSelectionUI();
     }
 
@@ -393,59 +393,44 @@
     document.getElementById('btn-delete-selected').onclick = async () => {
         if (!auth.currentUser || selectedChatIds.size === 0) return;
         const chatColl = `chats_${activeUserId}`;
-        const idsToDelete = Array.from(selectedChatIds); selectedChatIds.clear();
-        for (let id of idsToDelete) {
-            try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, id)); } catch(e) {}
-        }
+        const ids = Array.from(selectedChatIds); selectedChatIds.clear();
+        for (let id of ids) { try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, id)); } catch(e) {} }
     };
 
     document.getElementById('btn-print-selected').onclick = () => {
         const sel = messages.filter(m => selectedChatIds.has(m.id));
         let content = "<html><body style='padding:40px; font-family:sans-serif;'><h1>Mind History</h1>";
-        sel.forEach(m => { content += `<div style='margin-bottom:30px;'><b style='color:#3b82f6;'>${m.sender}</b><div style='white-space:pre-wrap;'>${m.text}</div></div>`; });
+        sel.forEach(m => { content += `<div style='margin-bottom:30px; border-bottom:1px solid #eee; padding-bottom:10px;'><b style='color:#3b82f6;'>${m.sender.toUpperCase()}</b><div style='white-space:pre-wrap; line-height:1.6;'>${m.text}</div></div>`; });
         content += "</body></html>";
         const w = window.open('', '', 'height=600,width=800'); w.document.write(content); w.document.close(); w.print();
     };
 
-    // --- OPTIMIZED AI LOGIC ---
+    // --- REFINED AI CALLING ---
     async function callAI(prompt, fileData = null, mimeType = null, isIndexing = false) {
         const masterInstr = document.getElementById('project-instructions').value;
         const selDocs = knowledgeBase.filter(d => selectedDocIds.has(d.id));
-        const docRoles = selDocs.map(d => d.role ? `[Instruction for ${d.name}: ${d.role}]` : '').join('\n');
+        const docRoles = selDocs.map(d => d.role ? `[Role for ${d.name}: ${d.role}]` : '').join('\n');
         const context = selDocs.map(d => `[Summary of ${d.name}: ${d.summary}]`).join('\n\n');
         
         const isSearchEnabled = (searchMode !== 'doc' && !isIndexing);
-        
-        const systemPrompt = `Master Role: ${masterInstr}\nDoc Roles: ${docRoles}\nKnowledge: ${context}\n\nMODE: ${searchMode}. STRICT RULES: If 'doc' mode, strictly NO internet. Answer only from knowledge. Use clear paragraphs.`;
+        const systemPrompt = `Role: ${masterInstr}\nKnowledge Context: ${context}\nDoc Instructions: ${docRoles}\n\nSTRICT: Mode is ${searchMode}. Answer only from context if doc mode. Format in paragraphs.`;
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-        const payload = { 
-            contents: [{ parts: [{ text: prompt }] }], 
-            systemInstruction: { parts: [{ text: systemPrompt }] },
-            tools: isSearchEnabled ? [{ "google_search": {} }] : [] 
-        };
-
+        const payload = { contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: systemPrompt }] }, tools: isSearchEnabled ? [{ "google_search": {} }] : [] };
         if (fileData) payload.contents[0].parts.push({ inlineData: { mimeType, data: fileData } });
 
-        let delay = 1500;
-        for (let i = 0; i < 5; i++) {
+        let delay = 2000;
+        for (let i = 0; i < 3; i++) {
             try {
                 const ctrl = new AbortController();
-                const timeoutId = setTimeout(() => ctrl.abort(), 60000); // 60s timeout
-
-                const res = await fetch(url, { 
-                    method: 'POST', 
-                    body: JSON.stringify(payload),
-                    signal: ctrl.signal 
-                });
-                clearTimeout(timeoutId);
-                
-                const responseText = await res.text();
-                if (!res.ok) throw new Error("API failed");
-                const data = JSON.parse(responseText);
-                return { text: data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.", sources: [] };
+                const tid = setTimeout(() => ctrl.abort(), 95000); 
+                const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload), signal: ctrl.signal });
+                clearTimeout(tid);
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                return { text: data.candidates?.[0]?.content?.parts?.[0]?.text || "System Error.", sources: [] };
             } catch (e) {
-                if (i === 4) return { text: "Connection error. Please check your internet or try a smaller file.", sources: [] };
+                if (i === 2) return { text: "Connection error. Badi file process karte waqt timeout ho sakta hai. Kripya choti file try karein ya internet check karein.", sources: [] };
                 await new Promise(r => setTimeout(r, delay)); delay *= 2;
             }
         }
@@ -455,10 +440,7 @@
         const text = chatInput.value.trim(); if (!text || !auth.currentUser || !activeUserId) return;
         chatInput.value = ''; const chatColl = `chats_${activeUserId}`;
         
-        // Add User Message
         await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text, sender: 'user', timestamp: Date.now() });
-        
-        // Add Thinking Indicator
         const procMsg = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: "Thinking...", sender: 'system', timestamp: Date.now() });
         
         const res = await callAI(text);
@@ -475,7 +457,7 @@
         const val = document.getElementById('project-instructions').value;
         await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'global'), { instructions: val });
         e.target.classList.add('success-btn'); e.target.innerText = "SAVED!";
-        setTimeout(() => { e.target.classList.remove('success-btn'); e.target.innerText = "Update master role"; }, 2000);
+        setTimeout(() => { e.target.classList.remove('success-btn'); e.target.innerText = "Update Master Role"; }, 2000);
     };
 
     document.getElementById('file-input').onchange = async (e) => {
@@ -483,20 +465,13 @@
         const chatColl = `chats_${activeUserId}`;
         for (const file of files) {
             const reader = new FileReader();
-            const procBubble = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: `AI is analyzing ${file.name}... Please wait.`, sender: 'system', timestamp: Date.now() });
-            
+            const procBubble = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: `AI is analyzing document: ${file.name}... Please wait.`, sender: 'system', timestamp: Date.now() });
             reader.onload = async (ev) => {
                 const b64 = ev.target.result.split(',')[1];
-                const res = await callAI(`Analyze and summarize this document carefully: ${file.name}`, b64, file.type, true);
-                
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'knowledge'), { 
-                    name: file.name, type: file.type, summary: res.text, role: '', timestamp: Date.now() 
-                });
-                
+                const res = await callAI(`Analyze and summarize this document carefully for the knowledge base: ${file.name}`, b64, file.type, true);
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'knowledge'), { name: file.name, type: file.type, summary: res.text, role: '', timestamp: Date.now() });
                 await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', chatColl, procBubble.id));
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { 
-                    text: `Upload successfully for "${file.name}". Now I am ready to chat about it.`, sender: 'ai', timestamp: Date.now() 
-                });
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', chatColl), { text: `Upload successfully for "${file.name}". Now I am ready to chat.`, sender: 'ai', timestamp: Date.now() });
             };
             reader.readAsDataURL(file);
         }
@@ -525,7 +500,7 @@
         messages.forEach(m => {
             p.setFont("helvetica", "bold"); p.text(`${m.sender.toUpperCase()}:`, 15, y);
             p.setFont("helvetica", "normal"); const ls = p.splitTextToSize(m.text, 180);
-            ls.forEach(l => { if (y > 275) { p.addPage(); y = 15; } p.text(l, 15, y + 8); y += 8; }); y += 10;
+            ls.forEach(l => { if (y > 275) { p.addPage(); y = 20; } p.text(l, 15, y + 8); y += 8; }); y += 12;
         }); p.save("history.pdf");
     };
 
